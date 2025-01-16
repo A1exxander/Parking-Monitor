@@ -1,5 +1,6 @@
 package user.entity;
 
+import auth.entity.UserCredentials;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,5 +44,8 @@ public class User {
     @UpdateTimestamp
     @Column(nullable = false)
     private Timestamp updatedAt;
+
+    @OneToOne(mappedBy = "User", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserCredentials credentials;
 
 }
