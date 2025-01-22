@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import user.entity.User;
-
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
 
 @Table
 @Entity
@@ -25,9 +23,9 @@ public class UserCredentials {
     @Length(min = 8, max = 256)
     private String hashedPassword;
 
+    @JoinColumn(name = "ID", nullable = false)
     @OneToOne
     @MapsId
-    @JoinColumn(name = "ID")
     private User user;
 
 }
