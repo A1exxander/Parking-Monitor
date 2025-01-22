@@ -11,6 +11,7 @@ import java.util.Date;
 
 @Entity
 @Table
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 public class User {
 
@@ -26,8 +27,8 @@ public class User {
     @Length(min = 2, max = 32)
     private String lastName;
 
-    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date birthDate;
 
     @Column(nullable = true)
@@ -37,12 +38,12 @@ public class User {
     @Column(columnDefinition = "ENUM('USER', 'OFFICER') NOT NULL DEFAULT 'USER'", updatable = false)
     private AccountType accountType = AccountType.USER;
 
-    @CreationTimestamp
     @Column(updatable = false, nullable = false)
+    @CreationTimestamp
     private Timestamp createdAt;
 
+    @Column(nullable = true)
     @UpdateTimestamp
-    @Column(nullable = false)
     private Timestamp updatedAt;
 
     @OneToOne(mappedBy = "User", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
