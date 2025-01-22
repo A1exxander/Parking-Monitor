@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `parkingmonitor` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `parkingmonitor`;
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: parkingmonitor
@@ -25,7 +27,7 @@ DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
   `ID` int NOT NULL AUTO_INCREMENT,
   `Name` varchar(32) NOT NULL,
-  `DepartmentType` enum('POLICE','PARKING-AUTHORITY') NOT NULL,
+  `DepartmentType` enum('POLICE','PARKING_AUTHORITY') NOT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `UpdatedAt` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `JurisdictionID` int NOT NULL,
@@ -328,4 +330,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-13 12:47:40
+-- Dump completed on 2025-01-22  3:55:45
