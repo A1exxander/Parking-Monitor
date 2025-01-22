@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 import java.sql.Timestamp;
+import java.util.Set;
 
 public class Department {
 
@@ -30,5 +31,8 @@ public class Department {
     @JoinColumn(name = "JurisdictionID", nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     private Jurisdiction jurisdiction;
+
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Officer> officers;
 
 }

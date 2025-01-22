@@ -3,7 +3,6 @@ package enforcement.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-
 import java.util.Set;
 
 @Entity
@@ -24,6 +23,6 @@ public class Jurisdiction {
     private String stateInitials;
 
     @OneToMany(mappedBy = "jurisdiction", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<Department> departments;
+    private Set<Department> departments;
 
 }
