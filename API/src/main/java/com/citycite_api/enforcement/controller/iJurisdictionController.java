@@ -1,6 +1,6 @@
-package enforcement.controller;
+package com.citycite_api.enforcement.controller;
 
-import enforcement.entity.Jurisdiction;
+import com.citycite_api.enforcement.entity.Jurisdiction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

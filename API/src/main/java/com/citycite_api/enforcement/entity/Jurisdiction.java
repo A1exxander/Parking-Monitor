@@ -1,4 +1,4 @@
-package enforcement.entity;
+package com.citycite_api.enforcement.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

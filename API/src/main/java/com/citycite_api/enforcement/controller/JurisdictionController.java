@@ -1,7 +1,7 @@
-package enforcement.controller;
+package com.citycite_api.enforcement.controller;
 
-import enforcement.service.iJurisdictionService;
-import enforcement.entity.Jurisdiction;
+import com.citycite_api.enforcement.entity.Jurisdiction;
+import com.citycite_api.enforcement.service.iJurisdictionService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

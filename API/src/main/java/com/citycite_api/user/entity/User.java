@@ -1,6 +1,6 @@
-package user.entity;
+package com.citycite_api.user.entity;
 
-import auth.entity.UserCredentials;
+import com.citycite_api.auth.entity.UserCredentials;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -46,7 +46,7 @@ public class User {
     @UpdateTimestamp
     private Timestamp updatedAt;
 
-    @OneToOne(mappedBy = "User", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private UserCredentials credentials;
 
 }

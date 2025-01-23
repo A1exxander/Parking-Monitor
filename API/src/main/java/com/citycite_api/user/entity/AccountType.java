@@ -1,4 +1,4 @@
-package user.entity;
+package com.citycite_api.user.entity;
 
 public enum AccountType {
     USER,

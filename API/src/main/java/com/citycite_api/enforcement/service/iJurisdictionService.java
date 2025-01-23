@@ -1,6 +1,6 @@
-package enforcement.service;
+package com.citycite_api.enforcement.service;
 
-import enforcement.entity.Jurisdiction;
+import com.citycite_api.enforcement.entity.Jurisdiction;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotNull;

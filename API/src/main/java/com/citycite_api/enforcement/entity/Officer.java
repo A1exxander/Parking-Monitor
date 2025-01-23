@@ -1,9 +1,9 @@
-package enforcement.entity;
+package com.citycite_api.enforcement.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import user.entity.User;
+import com.citycite_api.user.entity.User;
 
 @Entity
 @Table

@@ -1,4 +1,4 @@
-package enforcement.entity;
+package com.citycite_api.enforcement.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import java.sql.Timestamp;
 import java.util.Set;
 
+@Entity
 public class Department {
 
     @Id
@@ -17,7 +18,8 @@ public class Department {
     @Length(min = 3, max = 32)
     private String name;
 
-    @Column(columnDefinition = "ENUM('POLICE', 'PARKING_AUTHORITY') NOT NULL")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private DepartmentType departmentType;
 
     @Column(updatable = false, nullable = false)

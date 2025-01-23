@@ -1,7 +1,7 @@
-package enforcement.service;
+package com.citycite_api.enforcement.service;
 
-import enforcement.repository.iJurisdictionRepository;
-import enforcement.entity.Jurisdiction;
+import com.citycite_api.enforcement.entity.Jurisdiction;
+import com.citycite_api.enforcement.repository.iJurisdictionRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package enforcement.repository;
+package com.citycite_api.enforcement.repository;
 
-import enforcement.entity.Jurisdiction;
+import com.citycite_api.enforcement.entity.Jurisdiction;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
