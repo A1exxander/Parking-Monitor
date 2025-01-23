@@ -1,5 +1,6 @@
 package com.citycite_api.enforcement.controller;
 
+import com.citycite_api.enforcement.dto.JurisdictionResponse;
 import com.citycite_api.enforcement.entity.Jurisdiction;
 import com.citycite_api.enforcement.service.iJurisdictionService;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/jurisdictions")
@@ -34,7 +35,7 @@ public class JurisdictionController implements iJurisdictionController {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<Jurisdiction>> getAll() {
+    public ResponseEntity<Set<JurisdictionResponse>> getAll() {
         return ResponseEntity.ok(jurisdictionService.getAll());
     }
 
