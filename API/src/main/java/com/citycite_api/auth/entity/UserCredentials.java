@@ -1,10 +1,10 @@
 package com.citycite_api.auth.entity;
 
-import jakarta.persistence.*;
 import lombok.Data;
+import jakarta.persistence.*;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import com.citycite_api.user.entity.User;
-import javax.validation.constraints.Email;
 
 @Table
 @Entity
