@@ -1,6 +1,7 @@
 package com.citycite_api.user.entity;
 
 import com.citycite_api.auth.entity.UserCredentials;
+import com.citycite_api.report.entity.Report;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table

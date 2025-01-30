@@ -1,7 +1,6 @@
 package com.citycite_api.report.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -31,7 +30,7 @@ public class ReportVehicle {
     @Length(max = 8)
     private String color;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "LicensePlateID", nullable = false)
     private VehicleLicensePlate vehicleLicensePlate;
 
