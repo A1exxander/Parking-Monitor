@@ -21,7 +21,7 @@ public class VehicleLicensePlate {
     @Length(min = 2, max = 2)
     private String stateInitials;
 
-    @OneToOne(mappedBy = "vehicleLicensePlate", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "vehicleLicensePlate")
     private ReportVehicle reportVehicle;
 
 }

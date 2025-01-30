@@ -30,8 +30,11 @@ public class ReportVehicle {
     @Length(max = 8)
     private String color;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "LicensePlateID", nullable = false)
     private VehicleLicensePlate vehicleLicensePlate;
+
+    @OneToOne(mappedBy = "reportVehicle")
+    private Report report;
 
 }

@@ -27,4 +27,7 @@ public class ReportAddress {
     @Column(length = 128)
     private String notes;
 
+    @OneToOne(mappedBy = "reportAddress")
+    private Report report;
+
 }
