@@ -1,5 +1,6 @@
 package com.citycite_api.enforcement.entity;
 
+import com.citycite_api.report.entity.ReportAddress;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -24,5 +25,8 @@ public class Jurisdiction {
 
     @OneToMany(mappedBy = "jurisdiction", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Department> departments;
+
+    @OneToMany(mappedBy = "jurisdiction", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReportAddress> reportAddresses;
 
 }
