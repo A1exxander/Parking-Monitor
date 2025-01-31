@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "AccountType", discriminatorType = DiscriminatorType.STRING)
 @Data
 public class User {
 
@@ -40,6 +41,12 @@ public class User {
     @Column(columnDefinition = "ENUM('USER', 'OFFICER') NOT NULL DEFAULT 'USER'", updatable = false)
     private AccountType accountType = AccountType.USER;
 
+    @OneToMany(mappedBy = "submittingUser", fetch = FetchType.LAZY)
+    private List<Report> submittedReports;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserCredentials credentials;
+
     @Column(updatable = false, nullable = false)
     @CreationTimestamp
     private Timestamp createdAt;
@@ -47,8 +54,5 @@ public class User {
     @Column(nullable = true)
     @UpdateTimestamp
     private Timestamp updatedAt;
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private UserCredentials credentials;
 
 }

@@ -1,3 +1,5 @@
+use parkingmonitor;
+
 CREATE TABLE ResolvedReport (
 
     ID INTEGER PRIMARY KEY,
