@@ -117,15 +117,19 @@ CREATE TABLE `report` (
   `VehicleID` int NOT NULL,
   `AddressID` int NOT NULL,
   `ViolationDescription` varchar(256) DEFAULT NULL,
+  `RespondingOfficerID` int NOT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `UpdatedAt` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`),
   KEY `UserIDX` (`UserID`),
   KEY `VehicleIDX` (`VehicleID`),
   KEY `AddressIDX` (`AddressID`),
+  KEY `RespondingOfficerIDX` (`RespondingOfficerID`),
   KEY `CreatedAtIDX` (`CreatedAt`),
   CONSTRAINT `report_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`ID`) ON UPDATE CASCADE,
   CONSTRAINT `report_ibfk_2` FOREIGN KEY (`VehicleID`) REFERENCES `reportvehicle` (`ID`) ON UPDATE CASCADE,
-  CONSTRAINT `report_ibfk_3` FOREIGN KEY (`AddressID`) REFERENCES `reportaddress` (`ID`) ON UPDATE CASCADE
+  CONSTRAINT `report_ibfk_3` FOREIGN KEY (`AddressID`) REFERENCES `reportaddress` (`ID`) ON UPDATE CASCADE,
+  CONSTRAINT `report_ibfk_4` FOREIGN KEY (`RespondingOfficerID`) REFERENCES `officer` (`ID`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -227,6 +231,32 @@ LOCK TABLES `reportvehicle` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `resolvedreport`
+--
+
+DROP TABLE IF EXISTS `resolvedreport`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `resolvedreport` (
+  `ID` int NOT NULL,
+  `ResolutionStatus` enum('APPROVED','DENIED') NOT NULL,
+  `ResolutionTimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Notes` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  CONSTRAINT `resolvedreport_ibfk_1` FOREIGN KEY (`ID`) REFERENCES `report` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `resolvedreport`
+--
+
+LOCK TABLES `resolvedreport` WRITE;
+/*!40000 ALTER TABLE `resolvedreport` DISABLE KEYS */;
+/*!40000 ALTER TABLE `resolvedreport` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -312,14 +342,6 @@ LOCK TABLES `vehiclelicenseplate` WRITE;
 /*!40000 ALTER TABLE `vehiclelicenseplate` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vehiclelicenseplate` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping events for database 'parkingmonitor'
---
-
---
--- Dumping routines for database 'parkingmonitor'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -330,4 +352,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-22  3:55:45
+-- Dump completed on 2025-01-30 18:58:41
