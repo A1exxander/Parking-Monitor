@@ -1,7 +1,6 @@
 package com.citycite_api.report.entity;
 
 import com.citycite_api.enforcement.entity.Officer;
-import com.citycite_api.user.entity.AccountType;
 import com.citycite_api.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -57,17 +56,17 @@ public class Report {
     @UpdateTimestamp
     private Timestamp updatedAt;
 
-    public ReportStatus getReportStatus() { // TODO: Add ResolvedReport entity & then for in process check, check to see that the resolved report is null
+    public ReportStatus getReportStatus() {
         if (respondingOfficer == null && !isTimedOut()){
             return ReportStatus.OPEN;
         }
-        else if (respondingOfficer != null && !isTimedOut()){
+        else if (respondingOfficer != null && !isTimedOut() && resolutionStatus == null){
             return ReportStatus.IN_PROCESS;
         }
-        else if (isTimedOut()){
+        else if (isTimedOut() && resolutionStatus == null) {
             return ReportStatus.TIMED_OUT;
         }
-        else{
+        else {
             return ReportStatus.RESOLVED;
         }
     }
