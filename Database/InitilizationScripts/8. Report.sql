@@ -8,6 +8,8 @@ CREATE TABLE Report (
     AddressID INTEGER NOT NULL,
     ViolationDescription VARCHAR(256) NULL, 
     RespondingOfficerID INTEGER NOT NULL,
+    ResolutionStatus ENUM('APPROVED', 'DENIED') NULL,
+    ResolutionNotes VARCHAR(64) NULL,
 	CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     UpdatedAt TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP(),
     

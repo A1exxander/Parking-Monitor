@@ -118,6 +118,8 @@ CREATE TABLE `report` (
   `AddressID` int NOT NULL,
   `ViolationDescription` varchar(256) DEFAULT NULL,
   `RespondingOfficerID` int NOT NULL,
+  `ResolutionStatus` enum('APPROVED','DENIED') DEFAULT NULL,
+  `ResolutionNotes` varchar(64) DEFAULT NULL,
   `CreatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `UpdatedAt` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`),
@@ -231,30 +233,26 @@ LOCK TABLES `reportvehicle` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `resolvedreport`
+-- Temporary view structure for view `reportwithstatus`
 --
 
-DROP TABLE IF EXISTS `resolvedreport`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
+DROP TABLE IF EXISTS `reportwithstatus`;
+/*!50001 DROP VIEW IF EXISTS `reportwithstatus`*/;
+SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `resolvedreport` (
-  `ID` int NOT NULL,
-  `ResolutionStatus` enum('APPROVED','DENIED') NOT NULL,
-  `ResolutionTimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `Notes` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (`ID`),
-  CONSTRAINT `resolvedreport_ibfk_1` FOREIGN KEY (`ID`) REFERENCES `report` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `resolvedreport`
---
-
-LOCK TABLES `resolvedreport` WRITE;
-/*!40000 ALTER TABLE `resolvedreport` DISABLE KEYS */;
-/*!40000 ALTER TABLE `resolvedreport` ENABLE KEYS */;
-UNLOCK TABLES;
+/*!50001 CREATE VIEW `reportwithstatus` AS SELECT 
+ 1 AS `ID`,
+ 1 AS `UserID`,
+ 1 AS `VehicleID`,
+ 1 AS `AddressID`,
+ 1 AS `ViolationDescription`,
+ 1 AS `RespondingOfficerID`,
+ 1 AS `ResolutionStatus`,
+ 1 AS `ResolutionNotes`,
+ 1 AS `CreatedAt`,
+ 1 AS `UpdatedAt`,
+ 1 AS `Status`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `user`
@@ -342,6 +340,24 @@ LOCK TABLES `vehiclelicenseplate` WRITE;
 /*!40000 ALTER TABLE `vehiclelicenseplate` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vehiclelicenseplate` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Final view structure for view `reportwithstatus`
+--
+
+/*!50001 DROP VIEW IF EXISTS `reportwithstatus`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `reportwithstatus` AS select `r`.`ID` AS `ID`,`r`.`UserID` AS `UserID`,`r`.`VehicleID` AS `VehicleID`,`r`.`AddressID` AS `AddressID`,`r`.`ViolationDescription` AS `ViolationDescription`,`r`.`RespondingOfficerID` AS `RespondingOfficerID`,`r`.`ResolutionStatus` AS `ResolutionStatus`,`r`.`ResolutionNotes` AS `ResolutionNotes`,`r`.`CreatedAt` AS `CreatedAt`,`r`.`UpdatedAt` AS `UpdatedAt`,(case when (`r`.`ResolutionStatus` is not null) then 'RESOLVED' when ((`r`.`RespondingOfficerID` is not null) and (`r`.`CreatedAt` < (now() - interval 2 hour))) then 'TIMED-OUT' when (`r`.`RespondingOfficerID` is not null) then 'IN-PROCESS' else 'OPEN' end) AS `Status` from `report` `r` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -352,4 +368,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-30 18:58:41
+-- Dump completed on 2025-02-03 19:10:54
