@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 import java.time.Duration;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 @Table
@@ -46,7 +47,10 @@ public class Report {
     private ResolutionStatus resolutionStatus;
 
     @Column(nullable = true)
-    private String ResolutionNotes;
+    private String resolutionNotes;
+
+    @OneToMany(mappedBy = "report", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReportImage> reportImages;
 
     @Column(updatable = false, nullable = false)
     @CreationTimestamp
@@ -57,6 +61,7 @@ public class Report {
     private Timestamp updatedAt;
 
     public ReportStatus getReportStatus() {
+
         if (respondingOfficer == null && !isTimedOut()){
             return ReportStatus.OPEN;
         }
@@ -69,6 +74,7 @@ public class Report {
         else {
             return ReportStatus.RESOLVED;
         }
+
     }
 
     private boolean isTimedOut() {
