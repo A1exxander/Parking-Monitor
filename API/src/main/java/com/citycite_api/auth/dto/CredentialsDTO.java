@@ -1,0 +1,19 @@
+package com.citycite_api.auth.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+@Data
+public class CredentialsDTO {
+
+    @NotNull @Email
+    @Size(min = 8, max = 320)
+    private String emailAddress;
+
+    @NotNull
+    @Size(min = 8, max = 256)
+    private String password;
+
+}
