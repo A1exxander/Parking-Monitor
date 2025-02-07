@@ -7,9 +7,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Service
 @Transactional
+@AllArgsConstructor @NoArgsConstructor @Getter @Setter
 public class CredentialsService implements iCredentialsService {
 
     @Autowired
