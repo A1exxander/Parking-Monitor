@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface iCredentialsRepository extends CrudRepository<Credentials, Integer> {
-    Credentials findByEmailAddress(String emailAddress);
+    public Credentials findByEmailAddress(String emailAddress);
+    public boolean existsByEmailAddress(String emailAddress);
 }
