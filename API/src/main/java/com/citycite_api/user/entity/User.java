@@ -1,6 +1,6 @@
 package com.citycite_api.user.entity;
 
-import com.citycite_api.auth.entity.UserCredentials;
+import com.citycite_api.auth.entity.Credentials;
 import com.citycite_api.report.entity.Report;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -45,7 +45,7 @@ public class User {
     private List<Report> submittedReports;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private UserCredentials credentials;
+    private Credentials credentials;
 
     @Column(updatable = false, nullable = false)
     @CreationTimestamp

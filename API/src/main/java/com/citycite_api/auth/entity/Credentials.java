@@ -6,10 +6,10 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import com.citycite_api.user.entity.User;
 
-@Table
+@Table(name = "UserCredentials")
 @Entity
 @Data
-public class UserCredentials {
+public class Credentials {
 
     @Id
     private Integer ID;
