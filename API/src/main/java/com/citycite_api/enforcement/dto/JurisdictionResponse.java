@@ -1,8 +1,8 @@
 package com.citycite_api.enforcement.dto;
 
-import lombok.Data;
-import org.hibernate.validator.constraints.Length;
+import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 @Data
 public class JurisdictionResponse {
@@ -11,11 +11,11 @@ public class JurisdictionResponse {
     private Integer ID;
 
     @NotNull
-    @Length(min = 2, max = 32)
+    @Size(min = 2, max = 32)
     private String city;
 
     @NotNull
-    @Length(min = 2, max = 2)
+    @Size(min = 2, max = 2)
     private String stateInitials;
 
 }

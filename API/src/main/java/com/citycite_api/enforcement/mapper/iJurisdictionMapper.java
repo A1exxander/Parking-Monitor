@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface iJurisdictionMapper {
-    Set<JurisdictionResponse> jurisdictionsToJurisdictionResponses(Set<Jurisdiction> jurisdictions);
-    JurisdictionResponse jurisdictionToJurisdictionResponse(Jurisdiction jurisdiction);
+    public Set<JurisdictionResponse> jurisdictionsToJurisdictionResponses(Set<Jurisdiction> jurisdictions);
+    public JurisdictionResponse jurisdictionToJurisdictionResponse(Jurisdiction jurisdiction);
 }
 
