@@ -8,14 +8,14 @@ import lombok.Data;
 public class JurisdictionResponse {
 
     @NotNull
-    private Integer ID;
+    private final Integer ID;
 
     @NotNull
     @Size(min = 2, max = 32)
-    private String city;
+    private final String city;
 
     @NotNull
     @Size(min = 2, max = 2)
-    private String stateInitials;
+    private final String stateInitials;
 
 }
