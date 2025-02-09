@@ -1,6 +1,7 @@
 package com.citycite_api.auth.service;
 
-import com.citycite_api.auth.dto.RegistrationRequest;
+import com.citycite_api.auth.dto.CredentialsRequest;
+import com.citycite_api.user.dto.UserRequest;
 import com.citycite_api.user.service.iUserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,14 +22,14 @@ public class AuthService implements iAuthService {
     @Autowired
     private iUserService userService;
 
-    public void registerUser(RegistrationRequest registrationRequest) {
+    public void registerUser(UserRequest userRequest, CredentialsRequest credentialsRequest) {
 
-        if (credentialsService.emailAddressExists(registrationRequest.getCredentialsRequest().getEmailAddress())) {
+        if (credentialsService.emailAddressExists(credentialsRequest.getEmailAddress())) {
             throw new IllegalArgumentException("Invalid registration request! Email already in use."); // TODO : Swap to a custom generic exception ( ResourceAlreadyExists )
         }
 
-        String hashedPassword = credentialsService.hashPassword(registrationRequest.getCredentialsRequest().getPassword());
-        userService.createUser(registrationRequest.getUserRequest(), registrationRequest.getCredentialsRequest().getEmailAddress(), hashedPassword); // Don't send raw password if we don't need to
+        String hashedPassword = credentialsService.hashPassword(credentialsRequest.getPassword());
+        userService.createUser(userRequest, credentialsRequest.getEmailAddress(), hashedPassword); // Don't send raw password if we don't need to
 
     }
 
