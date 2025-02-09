@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -22,14 +23,16 @@ public class AuthService implements iAuthService {
     @Autowired
     private iUserService userService;
 
-    public void registerUser(UserRequest userRequest, CredentialsRequest credentialsRequest) {
+    public void registerUser(UserRequest userRequest, CredentialsRequest credentialsRequest, MultipartFile profilePicture) {
 
         if (credentialsService.emailAddressExists(credentialsRequest.getEmailAddress())) {
             throw new IllegalArgumentException("Invalid registration request! Email already in use."); // TODO : Swap to a custom generic exception ( ResourceAlreadyExists )
         }
 
         String hashedPassword = credentialsService.hashPassword(credentialsRequest.getPassword());
-        userService.createUser(userRequest, credentialsRequest.getEmailAddress(), hashedPassword); // Don't send raw password if we don't need to
+        if (profilePicture == null || profilePicture.isEmpty()) {
+            userService.createUser(userRequest, credentialsRequest.getEmailAddress(), hashedPassword); // Don't send raw password if we don't need to
+        }
 
     }
 
