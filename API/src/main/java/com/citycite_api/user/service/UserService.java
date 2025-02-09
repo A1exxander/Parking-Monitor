@@ -34,6 +34,7 @@ public class UserService implements iUserService {
         userCredentials.setHashedPassword(hashedPassword);
 
         user.setCredentials(userCredentials);
+        userCredentials.setUser(user);
         // TODO: Setup S3 then upload the file for profile picture from userRequest, get link, and then set it under user
 
         userRepository.save(user);
