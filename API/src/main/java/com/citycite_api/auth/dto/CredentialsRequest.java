@@ -10,10 +10,10 @@ public class CredentialsRequest {
 
     @NotNull @Email
     @Size(min = 8, max = 320)
-    private String emailAddress;
+    private final String emailAddress;
 
     @NotNull
     @Size(min = 8, max = 256)
-    private String password;
+    private final String password;
 
 }

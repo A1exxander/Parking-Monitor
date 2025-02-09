@@ -13,16 +13,16 @@ public class UserRequest {
 
     @NotNull
     @Size(min = 2, max = 32)
-    private String firstName;
+    private final String firstName;
 
     @NotNull
     @Size(min = 2, max = 32)
-    private String lastName;
+    private final String lastName;
 
     @NotNull @Past
-    private Date birthDate;
+    private final Date birthDate;
 
     @Null
-    private MultipartFile profilePicture;
+    private final MultipartFile profilePicture;
 
 }
