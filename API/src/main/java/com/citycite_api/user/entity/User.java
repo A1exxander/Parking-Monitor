@@ -15,6 +15,7 @@ import java.util.List;
 @Table
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "AccountType", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("USER")
 @Data
 public class User {
 
@@ -34,18 +35,19 @@ public class User {
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
+    @Column(name = "AccountType", updatable = false, insertable = false)
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType;
+
     @Column(nullable = true)
     @Length(max = 2048)
     private String profilePictureURL;
 
-    @Column(columnDefinition = "ENUM('USER', 'OFFICER') NOT NULL DEFAULT 'USER'", updatable = false)
-    private AccountType accountType = AccountType.USER;
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Credentials credentials;
 
     @OneToMany(mappedBy = "submittingUser", fetch = FetchType.LAZY)
     private List<Report> submittedReports;
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Credentials credentials;
 
     @Column(updatable = false, nullable = false)
     @CreationTimestamp
