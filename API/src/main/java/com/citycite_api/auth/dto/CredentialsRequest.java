@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CredentialsDTO {
+public class CredentialsRequest {
 
     @NotNull @Email
     @Size(min = 8, max = 320)
