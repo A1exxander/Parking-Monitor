@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
+@NoArgsConstructor(force = true)
 public class JurisdictionResponse {
 
     @NotNull
