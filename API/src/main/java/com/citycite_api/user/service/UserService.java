@@ -2,6 +2,7 @@ package com.citycite_api.user.service;
 
 import com.citycite_api.auth.entity.Credentials;
 import com.citycite_api.user.dto.UserRequest;
+import com.citycite_api.user.dto.UserResponse;
 import com.citycite_api.user.entity.User;
 import com.citycite_api.user.mapper.iUserMapper;
 import com.citycite_api.user.repository.iUserRepository;
@@ -39,6 +40,12 @@ public class UserService implements iUserService {
 
         userRepository.save(user);
 
+    }
+
+    @Override
+    public UserResponse findUserByEmail(String emailAddress) {
+        User user = userRepository.findByCredentialsEmailAddress(emailAddress);
+        return userMapper.userToUserResponse(user);
     }
 
 }
