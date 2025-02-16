@@ -28,4 +28,9 @@ public class Credentials {
     @MapsId
     private User user;
 
+    public Credentials(String emailAddress, String hashedPassword){
+        this.emailAddress = emailAddress;
+        this.hashedPassword = hashedPassword;
+    }
+
 }

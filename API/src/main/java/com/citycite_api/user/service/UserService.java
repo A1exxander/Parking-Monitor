@@ -29,10 +29,7 @@ public class UserService implements iUserService {
     public void createUser(UserRequest userRequest, String emailAddress, String hashedPassword) {
 
         User user = userMapper.userRequestToUser(userRequest);
-
-        Credentials userCredentials = new Credentials();
-        userCredentials.setEmailAddress(emailAddress);
-        userCredentials.setHashedPassword(hashedPassword);
+        Credentials userCredentials = new Credentials(emailAddress, hashedPassword);
 
         user.setCredentials(userCredentials);
         userCredentials.setUser(user);
