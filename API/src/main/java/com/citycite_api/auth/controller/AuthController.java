@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/auth")
 @Validated
-@AllArgsConstructor @NoArgsConstructor @Getter @Setter
+@AllArgsConstructor
 public class AuthController implements iAuthController {
 
     @Autowired
@@ -29,8 +29,14 @@ public class AuthController implements iAuthController {
                                          @Valid @RequestPart("credentialsRequest") CredentialsRequest credentialsRequest,
                                          @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture)
     {
-        authService.registerUser(userRequest, credentialsRequest, profilePicture);
+        authService.register(userRequest, credentialsRequest, profilePicture);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody CredentialsRequest credentialsRequest) {
+            String accessJWT = authService.login(credentialsRequest);
+            return ResponseEntity.ok(accessJWT);
     }
 
 }

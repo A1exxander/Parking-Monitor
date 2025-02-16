@@ -1,19 +1,17 @@
 package com.citycite_api.auth.service;
 
+import com.citycite_api.auth.dto.CredentialsRequest;
 import com.citycite_api.auth.entity.Credentials;
-import com.citycite_api.auth.mapper.iCredentialsMapper;
 import com.citycite_api.auth.repository.iCredentialsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
 @Service
 @Transactional
-@AllArgsConstructor @Getter @Setter
+@AllArgsConstructor
 public class CredentialsService implements iCredentialsService {
 
     @Autowired
@@ -21,9 +19,6 @@ public class CredentialsService implements iCredentialsService {
 
     @Autowired
     private iCredentialsRepository credentialsRepository;
-
-    @Autowired
-    private iCredentialsMapper credentialsMapper;
 
     @Override
     public Credentials findByEmailAddress(String emailAddress) {
@@ -38,6 +33,15 @@ public class CredentialsService implements iCredentialsService {
     @Override
     public String hashPassword(String rawPassword) {
         return passwordEncoder.encode(rawPassword);
+    }
+
+    @Override
+    public boolean areValidCredentials(CredentialsRequest credentialsRequest) {
+        Credentials credentials = credentialsRepository.findByEmailAddress(credentialsRequest.getEmailAddress());
+        if (credentials == null){
+            return false;
+        }
+        return passwordEncoder.matches(credentialsRequest.getPassword(), credentials.getHashedPassword());
     }
 
 }
