@@ -2,7 +2,7 @@ package com.citycite_api.enforcement.dto;
 
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.*;
 
 @Data
 public class JurisdictionResponse {
