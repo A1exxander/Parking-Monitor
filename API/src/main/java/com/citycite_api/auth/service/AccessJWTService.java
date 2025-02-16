@@ -7,6 +7,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.Date;
@@ -14,7 +17,10 @@ import java.util.Date;
 @Service
 @Transactional
 @AllArgsConstructor
-public class AccessJWTService {
+@NoArgsConstructor
+@Getter
+@Setter
+public class AccessJWTService implements iAccessJWTService {
 
     @Value("${app.jwt.secret}")
     private String secretKey;
@@ -22,6 +28,7 @@ public class AccessJWTService {
     @Value("${app.jwt.access-token-expiration}")
     private long accessTokenExpirationMS;
 
+    @Override
     public String generateAccessJWT(Integer userId, AccountType accountType) {
         return Jwts.builder()
                 .setSubject(Integer.toString(userId))  // Set the subject to the user's ID
@@ -32,6 +39,7 @@ public class AccessJWTService {
                 .compact();  // Create and return the token
     }
 
+    @Override
     public Claims getJWTClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
@@ -39,6 +47,7 @@ public class AccessJWTService {
                 .getBody();
     }
 
+    @Override
     public boolean isValidSignature(String token) {
         try {
             // Try to parse the JWT and validate its signature
@@ -49,6 +58,18 @@ public class AccessJWTService {
         }
     }
 
+    @Override
+    public AccountType extractUserRole(String token) {
+        try {
+            Claims claims = getJWTClaims(token);
+            return AccountType.valueOf(claims.get("role", String.class));
+        } catch (JwtException | IllegalArgumentException e) {
+            // Handle exception (e.g., log it)
+            return null;
+        }
+    }
+
+    @Override
     public Integer extractUserID(String token) {
         try {
             Claims claims = getJWTClaims(token);
@@ -59,16 +80,7 @@ public class AccessJWTService {
         }
     }
 
-    public AccountType getUserRoleFromToken(String token) {
-        try {
-            Claims claims = getJWTClaims(token);
-            return AccountType.valueOf(claims.get("role", String.class));
-        } catch (JwtException | IllegalArgumentException e) {
-            // Handle exception (e.g., log it)
-            return null;
-        }
-    }
-
+    @Override
     public boolean isExpired(String token) {
         try {
             Claims claims = getJWTClaims(token);  // Extract claims from the token
