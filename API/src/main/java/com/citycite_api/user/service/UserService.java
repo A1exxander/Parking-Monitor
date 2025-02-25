@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -41,7 +42,13 @@ public class UserService implements iUserService {
 
     @Override
     public UserResponse findUserByEmail(String emailAddress) {
-        User user = userRepository.findByCredentialsEmailAddress(emailAddress);
+        User user = userRepository.findByCredentialsEmailAddress(emailAddress).orElseThrow(() -> new NoSuchElementException("User with the email " + emailAddress + " not found."));
+        return userMapper.userToUserResponse(user);
+    }
+
+    @Override
+    public UserResponse findUserByID(Integer ID) {
+        User user = userRepository.findById(ID).orElseThrow(() -> new NoSuchElementException("User with ID " + ID + " not found."));
         return userMapper.userToUserResponse(user);
     }
 
