@@ -2,13 +2,14 @@ package com.citycite_api.auth.entity;
 
 import lombok.Data;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import com.citycite_api.user.entity.User;
 
 @Table(name = "UserCredentials")
 @Entity
-@Data
+@Data @NoArgsConstructor
 public class Credentials {
 
     @Id
@@ -28,7 +29,7 @@ public class Credentials {
     @MapsId
     private User user;
 
-    public Credentials(String emailAddress, String hashedPassword){
+    public Credentials(String emailAddress, String hashedPassword) {
         this.emailAddress = emailAddress;
         this.hashedPassword = hashedPassword;
     }
