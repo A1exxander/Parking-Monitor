@@ -65,13 +65,10 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-			<version>6.4.2</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-
 
 		<!-- Spring Boot Starter Test (for unit tests) -->
 		<dependency>
@@ -126,6 +123,7 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.12.5</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -22,7 +22,7 @@ public class AuthService implements iAuthService {
     private iUserService userService;
 
     @Autowired
-    private AccessJWTService accessJWTService;
+    private JwtProvider jwtProvider;
 
     @Override
     public void register(UserRequest userRequest, CredentialsRequest credentialsRequest, MultipartFile profilePicture) {
@@ -44,7 +44,7 @@ public class AuthService implements iAuthService {
         }
 
         UserResponse user = userService.findUserByEmail(credentialsRequest.getEmailAddress());
-        return accessJWTService.generateAccessJWT(user.getID(), user.getAccountType());
+        return jwtProvider.generateAccessJWT(user.getID(), user.getAccountType());
 
     }
 
