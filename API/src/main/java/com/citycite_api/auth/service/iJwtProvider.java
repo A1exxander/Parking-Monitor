@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public interface iJwtProvider {
     public String generateAccessJWT(Integer userId, AccountType accountType);
     public Claims getJWTClaims(String token);
-    public AccountType extractUserRole(Claims jwtClaims);
+    public String extractUserRole(Claims jwtClaims);
     public Integer extractUserID(Claims jwtClaims);
     public boolean isExpired(Claims jwtClaims);
     public String removeBearerPrefix(String jwt) throws MalformedJwtException;

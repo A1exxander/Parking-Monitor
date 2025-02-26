@@ -23,7 +23,7 @@ public class JwtProvider implements iJwtProvider {
     public String generateAccessJWT(Integer userId, AccountType accountType) {
         return Jwts.builder()
                 .setSubject(Integer.toString(userId))
-                .claim("role", accountType)
+                .claim("role", "ROLE_" + accountType.name())
                 .setIssuer("CityCite")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTimeMS))
@@ -45,8 +45,8 @@ public class JwtProvider implements iJwtProvider {
     }
 
     @Override
-    public AccountType extractUserRole(Claims jwtClaims) {
-            return AccountType.valueOf(jwtClaims.get("role", String.class));
+    public String extractUserRole(Claims jwtClaims) {
+            return jwtClaims.get("role", String.class);
     }
 
     @Override
