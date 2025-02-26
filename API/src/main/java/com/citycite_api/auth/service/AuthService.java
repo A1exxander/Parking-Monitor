@@ -22,7 +22,7 @@ public class AuthService implements iAuthService {
     private iUserService userService;
 
     @Autowired
-    private JwtProvider jwtProvider;
+    private iJwtProvider jwtProvider;
 
     @Override
     public void register(UserRequest userRequest, CredentialsRequest credentialsRequest, MultipartFile profilePicture) {
