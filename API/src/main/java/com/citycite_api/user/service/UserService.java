@@ -6,6 +6,7 @@ import com.citycite_api.user.dto.UserResponse;
 import com.citycite_api.user.entity.User;
 import com.citycite_api.user.mapper.iUserMapper;
 import com.citycite_api.user.repository.iUserRepository;
+import jakarta.persistence.Id;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,6 +51,11 @@ public class UserService implements iUserService {
     public UserResponse findUserByID(Integer ID) {
         User user = userRepository.findById(ID).orElseThrow(() -> new NoSuchElementException("User with ID " + ID + " not found."));
         return userMapper.userToUserResponse(user);
+    }
+
+    @Override
+    public Boolean userExistsByID(Integer ID) {
+        return userRepository.existsById(ID);
     }
 
 }
