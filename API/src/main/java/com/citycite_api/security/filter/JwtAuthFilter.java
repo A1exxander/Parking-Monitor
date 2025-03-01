@@ -1,7 +1,6 @@
 package com.citycite_api.security.filter;
 
 import com.citycite_api.auth.service.JwtProvider;
-import com.citycite_api.user.entity.AccountType;
 import com.citycite_api.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -28,7 +27,7 @@ import java.util.Collections;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtProvider jwtService;
+    private JwtProvider jwtProvider;
 
     @Autowired
     private UserService userService;
@@ -40,22 +39,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || authHeader.length() == 0) {
+        if (authHeader == null || authHeader.isBlank()) {
             throw new AuthenticationCredentialsNotFoundException("Authorization header is missing or empty");
         } // This + all the following potential exceptions should be caught using a global entrypoint exception handler ( Not ControllerAdvice )
 
-        String jwt = jwtService.removeBearerPrefix(authHeader);
-        Claims jwtClaims = jwtService.getJWTClaims(jwt);
+        String jwt = jwtProvider.removeBearerPrefix(authHeader);
+        Claims jwtClaims = jwtProvider.getJWTClaims(jwt);
 
-        Integer userID = jwtService.extractUserID(jwtClaims);
-        String userRole = jwtService.extractUserRole(jwtClaims);
-        boolean isJwtExpired = jwtService.isExpired(jwtClaims);
+        Integer userID = jwtProvider.extractUserID(jwtClaims);
+        String userRole = jwtProvider.extractUserRole(jwtClaims);
+        boolean isJwtExpired = jwtProvider.isExpired(jwtClaims);
 
-        if (isJwtExpired) {
-            throw new ExpiredJwtException(null, null, "JWT has expired");
+        if (userID == null || userID <= 0 || !userService.userExistsByID(userID) || userRole == null || userRole.isBlank()) {
+            throw new JwtException("Invalid JWT provided. UserID or UserRole is invalid.");
         }
-        else if (userID == null || !userService.userExistsByID(userID) || userRole == null || userRole.length() == 0) {
-            throw new JwtException("Invalid JWT provided.");
+        else if (isJwtExpired) {
+            throw new ExpiredJwtException(null, null, "Invalid JWT provided. JWT has expired");
         }
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
