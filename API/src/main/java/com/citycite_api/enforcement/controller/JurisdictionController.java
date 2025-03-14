@@ -22,7 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @RestController
-@RequestMapping("/api/v1/jurisdictions/")
+@RequestMapping("/api/v1/jurisdictions")
 @Validated
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter
 public class JurisdictionController implements iJurisdictionController {
@@ -31,7 +31,7 @@ public class JurisdictionController implements iJurisdictionController {
     private iJurisdictionService jurisdictionService;
 
     @Override
-    @GetMapping("supported/check")
+    @GetMapping("/supported/check")
     public ResponseEntity<Boolean> isSupported(@Size(min = 2, max = 32) @RequestParam(name = "city") @NotNull String city,
                                                @Size(min = 2, max = 2) @RequestParam(name = "state") @NotNull String stateInitials
     ) {
@@ -45,7 +45,7 @@ public class JurisdictionController implements iJurisdictionController {
     }
 
     @Override
-    @GetMapping("search")
+    @GetMapping("/search")
     public ResponseEntity<Page<JurisdictionResponse>> findByCityStartingWith(
             @Size(min = 2, max = 32) @RequestParam(name = "city") @NotNull String city,
             @PageableDefault(page = 0, size = 10, sort = "city", direction = Sort.Direction.ASC) Pageable pageable

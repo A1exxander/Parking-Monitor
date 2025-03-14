@@ -18,7 +18,7 @@ import java.util.Set;
 @RequestMapping("/api/v1/jurisdictions/")
 public interface iJurisdictionController {
 
-    @GetMapping("/supported/check")
+    @GetMapping("supported/check")
     public ResponseEntity<Boolean> isSupported(@Size(min = 2, max = 32) @RequestParam(name = "city") @NotNull String city,
                                                @Size(min = 2, max = 2) @RequestParam(name = "state") @NotNull String stateInitials
     );

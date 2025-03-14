@@ -16,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth/")
+@RequestMapping("/api/v1/auth")
 @Validated
 @AllArgsConstructor
 public class AuthController implements iAuthController {
@@ -24,7 +24,8 @@ public class AuthController implements iAuthController {
     @Autowired
     private iAuthService authService;
 
-    @PostMapping("register")
+    @Override
+    @PostMapping("/register")
     public ResponseEntity<Void> register(@Valid @RequestPart("userRequest") UserRequest userRequest,
                                          @Valid @RequestPart("credentialsRequest") CredentialsRequest credentialsRequest,
                                          @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture)
@@ -33,7 +34,8 @@ public class AuthController implements iAuthController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("login")
+    @Override
+    @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody CredentialsRequest credentialsRequest) {
             String accessJWT = authService.login(credentialsRequest);
             return ResponseEntity.ok(accessJWT);
