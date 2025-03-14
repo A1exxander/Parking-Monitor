@@ -3,6 +3,7 @@ package com.citycite_api.report.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import com.citycite_api.enforcement.entity.Jurisdiction;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table
@@ -13,6 +14,10 @@ public class ReportAddress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Integer ID;
+
+    @Column(nullable = false)
+    @Length(min = 4, max = 64)
+    private String streetLine;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "JurisdictionID", nullable = false)
