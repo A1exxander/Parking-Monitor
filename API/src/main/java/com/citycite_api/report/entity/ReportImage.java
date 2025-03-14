@@ -20,7 +20,7 @@ public class ReportImage {
     private String objectKey;
 
     @Column(columnDefinition = "ENUM('JPEG', 'PNG', 'WEBP', 'HEIC') NOT NULL")
-    private String imageFormat;
+    private ReportImageFormat imageFormat;
 
     @Column(nullable = false)
     private Integer imageSize;
