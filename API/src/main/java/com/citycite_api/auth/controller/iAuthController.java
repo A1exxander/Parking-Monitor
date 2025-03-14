@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface iAuthController {
 
-    @PostMapping("/register")
+    @PostMapping("register")
     public ResponseEntity<Void> register(@Valid @RequestPart("userRequest") UserRequest userRequest,
                                          @Valid @RequestPart("credentialsRequest") CredentialsRequest credentialsRequest,
                                          @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture);

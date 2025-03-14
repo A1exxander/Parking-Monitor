@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/users/")
 @Validated
 @AllArgsConstructor
 public class UserController {
@@ -21,7 +21,7 @@ public class UserController {
     @Autowired
     private iUserService userService;
 
-    @GetMapping("/current")
+    @GetMapping("current")
     public ResponseEntity<UserResponse> getCurrentUser(@NotNull Authentication authentication) {
         Integer currentUserID = (Integer) authentication.getPrincipal(); // UserID is already validated from our filter
         return ResponseEntity.ok(userService.findUserByID(currentUserID));
