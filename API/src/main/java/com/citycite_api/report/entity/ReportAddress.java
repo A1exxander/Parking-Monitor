@@ -23,7 +23,8 @@ public class ReportAddress {
     @JoinColumn(name = "JurisdictionID", nullable = false)
     private Jurisdiction jurisdiction;
 
-    @Column(nullable = false, length = 9)
+    @Column(nullable = false)
+    @Length(min = 5, max = 9)
     private String zipcode;
 
     @Embedded
