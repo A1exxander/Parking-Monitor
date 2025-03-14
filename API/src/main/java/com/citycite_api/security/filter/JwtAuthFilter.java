@@ -20,7 +20,9 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -72,8 +74,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return pathMatcher.match("/api/v*/auth/**", request.getServletPath()) ||
-                pathMatcher.match("/api/v*/jurisdictions/**", request.getServletPath());
+
+        List<String> excludedPaths = Arrays.asList(
+                "/api/v*/auth/**",
+                "/api/v*/jurisdictions/**",
+                "/swagger-ui/**",
+                "/v3/api-docs/**"
+        );
+
+        return excludedPaths.stream().anyMatch(pattern -> pathMatcher.match(pattern, request.getServletPath()));
+
     }
 
 }
