@@ -72,7 +72,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return pathMatcher.match("/api/v*/auth/**", request.getServletPath());
+        return pathMatcher.match("/api/v*/auth/**", request.getServletPath()) ||
+                pathMatcher.match("/api/v*/jurisdictions/**", request.getServletPath());
     }
 
 }

@@ -31,7 +31,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // As this API is primarily consumed from a mobile app, we could prob disable CORS
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v**/auth/**").permitAll()
+                        .requestMatchers("/api/v*/auth/**").permitAll()
+                        .requestMatchers("/api/v*/jurisdictions/**").permitAll() // Add this line
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
