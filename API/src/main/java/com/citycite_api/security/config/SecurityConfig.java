@@ -15,6 +15,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
+import static org.springframework.security.web.access.IpAddressAuthorizationManager.hasIpAddress;
 
 @Configuration
 @EnableMethodSecurity
@@ -31,8 +32,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // As this API is primarily consumed from a mobile app, we could prob disable CORS
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v*/auth/**").permitAll()
-                        .requestMatchers("/api/v*/jurisdictions/**").permitAll() // Add this line
+                        .requestMatchers("/api/v*/auth/**", "/api/v*/jurisdictions/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").access(hasIpAddress("127.0.0.1"))
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -47,10 +48,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList(
-                "http://localhost",
-                "http://localhost:8080"
-        ));
+        config.setAllowedOrigins(Arrays.asList("http://localhost"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(Arrays.asList("**"));
 
