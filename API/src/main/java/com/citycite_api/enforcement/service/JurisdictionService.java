@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.Set;
 
 @Service
@@ -26,13 +28,19 @@ public class JurisdictionService implements iJurisdictionService {
 
     @Override
     public Set<JurisdictionResponse> getAll() {
-        Set<Jurisdiction> jurisdictions = jurisdictionRepository.findAll();
+        Set<Jurisdiction> jurisdictions = jurisdictionRepository.findBy();
         return jurisdictionMapper.jurisdictionsToJurisdictionResponses(jurisdictions);
     }
 
     @Override
     public boolean isSupported(String city, String stateInitials) {
         return jurisdictionRepository.existsByCityIgnoreCaseAndStateInitialsIgnoreCase(city, stateInitials);
+    }
+
+    @Override
+    public Page<JurisdictionResponse> findByCityStartingWith(String city, Pageable pageable) {
+        Page<Jurisdiction> jurisdictionPage = jurisdictionRepository.findByCityStartsWith(city, pageable);
+        return jurisdictionPage.map(jurisdictionMapper::jurisdictionToJurisdictionResponse);
     }
 
 }
