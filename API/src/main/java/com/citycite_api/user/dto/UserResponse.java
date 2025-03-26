@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class UserResponse {
+
         private Integer ID;
         private String firstName;
         private String lastName;
@@ -14,4 +15,5 @@ public class UserResponse {
         private String profilePictureURL;
         private Date createdAt;
         private Date updatedAt;
+
 }

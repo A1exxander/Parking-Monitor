@@ -4,7 +4,9 @@ import lombok.*;
 
 @Data
 public class JurisdictionResponse {
+
     private Integer ID;
     private String city;
     private String stateInitials;
+
 }

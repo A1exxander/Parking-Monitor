@@ -14,9 +14,9 @@ public class ReportRequest {
     private final String violationDescription;
 
     @NotNull @Valid
-    private final ReportAddressDTO reportAddressDTO;
+    private final ReportAddressDTO reportAddress;
 
     @NotNull @Valid
-    private final ReportVehicleDTO reportVehicleDTO;
+    private final ReportVehicleDTO reportVehicle;
 
 }
