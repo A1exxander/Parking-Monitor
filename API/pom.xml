@@ -36,6 +36,11 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
 		<!-- SpringDoc OpenAPI UI (Updated for Jakarta) -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -107,12 +112,14 @@
 			<artifactId>jjwt-api</artifactId>
 			<version>0.11.5</version> <!-- Replace with your version -->
 		</dependency>
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
 			<version>0.11.5</version> <!-- Replace with your version -->
 			<scope>runtime</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
