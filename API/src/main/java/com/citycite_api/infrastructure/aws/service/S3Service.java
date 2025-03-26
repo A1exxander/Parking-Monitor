@@ -1,4 +1,4 @@
-package com.citycite_api.cloud.aws.service;
+package com.citycite_api.infrastructure.aws.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;

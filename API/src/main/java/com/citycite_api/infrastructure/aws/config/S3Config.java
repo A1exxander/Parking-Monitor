@@ -1,4 +1,4 @@
-package com.citycite_api.cloud.aws.config;
+package com.citycite_api.infrastructure.aws.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

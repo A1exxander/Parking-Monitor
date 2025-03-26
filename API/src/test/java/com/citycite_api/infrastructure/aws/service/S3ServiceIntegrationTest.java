@@ -1,4 +1,4 @@
-package com.citycite_api.cloud.aws.service;
+package com.citycite_api.infrastructure.aws.service;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
