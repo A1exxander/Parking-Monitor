@@ -1,5 +1,7 @@
 package com.citycite_api.report.service;
 
+import com.citycite_api.report.dto.AddressCoordinatesDTO;
+import com.citycite_api.report.dto.ReportMapResponse;
 import com.citycite_api.report.dto.ReportResponse;
 import jakarta.transaction.Transactional;
 import lombok.*;
@@ -12,8 +14,13 @@ import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.data.geo.Point;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,13 +37,12 @@ public class ReportCacheService {
     private Integer reportTTLMinutes;
 
     private String baseGeoKey = "reports:geo:";
-    private String reportExpirationKey = "reports:expirations";
+    private String expirationKey = "reports:expirations";
 
     public void cacheReport(ReportResponse report) {
 
         String jurisdictionKey = baseGeoKey + report.getReportAddress().getJurisdictionID().toString();
 
-        // Compute the absolute expiration timestamp in milliseconds
         long expirationTimestamp = report.getCreatedAt().toInstant().toEpochMilli() + TimeUnit.MINUTES.toMillis(reportTTLMinutes);
         if (expirationTimestamp <= System.currentTimeMillis()) {
             throw new IllegalArgumentException("Cannot cache expired report!");
@@ -49,16 +55,40 @@ public class ReportCacheService {
 
         // With Redis, we cannot add a TTL to each val in a geoset, and we will need to cache expiration separately
         redisTemplate.opsForGeo().add(jurisdictionKey, reportPoint, report.getReportID().toString());
-        redisTemplate.opsForZSet().add(reportExpirationKey, report.getReportID().toString(), expirationTimestamp);
+        redisTemplate.opsForZSet().add(expirationKey, report.getReportID().toString(), expirationTimestamp);
 
     }
 
-    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.MINUTES)
+    public List<ReportMapResponse> getAllCachedReports(Integer jurisdictionID) {
+
+        String jurisdictionKey = baseGeoKey + jurisdictionID.toString();
+        Set<String> members = redisTemplate.opsForZSet().range(jurisdictionKey, 0, -1);
+
+        if (members == null || members.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return members.stream()
+                .map(member -> {
+                    Point point = redisTemplate.opsForGeo().position(jurisdictionKey, member).get(0);
+                    return new ReportMapResponse(
+                            Integer.parseInt(member),  // Use String ID directly
+                            new AddressCoordinatesDTO(
+                                    point.getX(),  // longitude
+                                    point.getY()   // latitude
+                            )
+                    );
+                })
+                .collect(Collectors.toList());
+
+    }
+
+    @Scheduled(fixedRate = 10, timeUnit = TimeUnit.MINUTES)
     @SchedulerLock(name = "cleanupExpiredReports", lockAtLeastFor = "PT4M", lockAtMostFor = "PT5M")
     protected void cleanupExpiredReports() { // I have no idea how any of this works but hope it works
 
         long now = System.currentTimeMillis();
-        Set<String> expiredReportIds = redisTemplate.opsForZSet().rangeByScore(reportExpirationKey, 0, now);
+        Set<String> expiredReportIds = redisTemplate.opsForZSet().rangeByScore(expirationKey, 0, now);
 
         if (expiredReportIds != null && !expiredReportIds.isEmpty()) {
 
@@ -76,7 +106,9 @@ public class ReportCacheService {
                     }
                 }
             }
-            redisTemplate.opsForZSet().removeRangeByScore(reportExpirationKey, 0, now);
+
+            redisTemplate.opsForZSet().removeRangeByScore(expirationKey, 0, now);
+
         }
     }
 

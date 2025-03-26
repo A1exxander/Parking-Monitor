@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class AddressCoordinatesDTO {
+public class ReportMapResponse {
 
-    private double longitude;
-    private double latitude;
+    private Integer reportID;
+    private AddressCoordinatesDTO addressCoordinates;
 
 }
