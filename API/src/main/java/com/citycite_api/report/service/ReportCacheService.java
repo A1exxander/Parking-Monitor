@@ -8,27 +8,24 @@ import lombok.*;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.geo.*;
+import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.data.geo.Point;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class ReportCacheService {
+@AllArgsConstructor @NoArgsConstructor @Getter @Setter
+public class ReportCacheService implements iReportCacheService {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate; // May need to switch to Object
@@ -39,6 +36,7 @@ public class ReportCacheService {
     private String baseGeoKey = "reports:geo:";
     private String expirationKey = "reports:expirations";
 
+    @Override
     public void cacheReport(ReportResponse report) {
 
         String jurisdictionKey = baseGeoKey + report.getReportAddress().getJurisdictionID().toString();
@@ -59,24 +57,35 @@ public class ReportCacheService {
 
     }
 
+    @Override
     public List<ReportMapResponse> getAllCachedReports(Integer jurisdictionID) {
 
-        String jurisdictionKey = baseGeoKey + jurisdictionID.toString();
-        Set<String> members = redisTemplate.opsForZSet().range(jurisdictionKey, 0, -1);
+        Circle planetRadius = new Circle( // Create a radius large enough to cover the entire planet ( ~20,037 )
+                new Point(0, 0),
+                new Distance(20037, Metrics.KILOMETERS)
+        );
 
-        if (members == null || members.isEmpty()) {
+        return getAllCachedReports(jurisdictionID, planetRadius);
+
+    }
+
+    @Override
+    public List<ReportMapResponse> getAllCachedReports(Integer jurisdictionID, Circle radius) {
+
+        String jurisdictionKey = baseGeoKey + jurisdictionID.toString();
+        GeoResults<RedisGeoCommands.GeoLocation<String>> results = redisTemplate.opsForGeo().radius(jurisdictionKey, radius);
+
+        if (results == null || results.getContent().isEmpty()) {
             return Collections.emptyList();
         }
 
-        return members.stream()
-                .map(member -> {
-                    Point point = redisTemplate.opsForGeo().position(jurisdictionKey, member).get(0);
+        return results.getContent().stream()
+                .map(geoResult -> {
+                    RedisGeoCommands.GeoLocation<String> location = geoResult.getContent();
+                    Point point = location.getPoint();
                     return new ReportMapResponse(
-                            Integer.parseInt(member),  // Use String ID directly
-                            new AddressCoordinatesDTO(
-                                    point.getX(),  // longitude
-                                    point.getY()   // latitude
-                            )
+                            Integer.parseInt(location.getName()),
+                            new AddressCoordinatesDTO(point.getX(), point.getY())
                     );
                 })
                 .collect(Collectors.toList());
