@@ -36,9 +36,6 @@ public class Report {
     @Length(max = 256)
     private String violationDescription;
 
-    @Transient
-    private ReportStatus reportStatus;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RespondingOfficerID", nullable = true)
     private Officer respondingOfficer;
@@ -79,7 +76,7 @@ public class Report {
 
     private boolean isTimedOut() {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-        return Duration.between(createdAt.toInstant(), currentTimestamp.toInstant()).toHours() >= 2;
+        return createdAt == null ? false : Duration.between(createdAt.toInstant(), currentTimestamp.toInstant()).toHours() >= 2;
     }
 
 }
