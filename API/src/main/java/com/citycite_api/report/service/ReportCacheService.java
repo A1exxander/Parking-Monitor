@@ -92,6 +92,15 @@ public class ReportCacheService implements iReportCacheService {
 
     }
 
+    @Override
+    public void removeCachedReport(Integer jurisdictionID, Integer reportID) { // reportID is unique, but since it's located inside a jurisdiction, we need it for O(logn) removals
+
+        String jurisdictionKey = baseGeoKey + jurisdictionID.toString();
+        redisTemplate.opsForZSet().remove(jurisdictionKey, reportID.toString());
+        redisTemplate.opsForZSet().remove(expirationKey, reportID.toString());
+
+    }
+
     @Scheduled(fixedRate = 10, timeUnit = TimeUnit.MINUTES)
     @SchedulerLock(name = "cleanupExpiredReports", lockAtLeastFor = "PT4M", lockAtMostFor = "PT5M")
     protected void cleanupExpiredReports() { // I have no idea how any of this works but hope it works
