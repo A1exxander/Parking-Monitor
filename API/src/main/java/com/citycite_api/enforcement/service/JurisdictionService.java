@@ -1,6 +1,6 @@
 package com.citycite_api.enforcement.service;
 
-import com.citycite_api.enforcement.dto.JurisdictionResponse;
+import com.citycite_api.enforcement.dto.JurisdictionDTO;
 import com.citycite_api.enforcement.entity.Jurisdiction;
 import com.citycite_api.enforcement.mapper.iJurisdictionMapper;
 import com.citycite_api.enforcement.repository.iJurisdictionRepository;
@@ -27,7 +27,7 @@ public class JurisdictionService implements iJurisdictionService {
     private iJurisdictionMapper jurisdictionMapper;
 
     @Override
-    public Set<JurisdictionResponse> getAll() {
+    public Set<JurisdictionDTO> getAll() {
         Set<Jurisdiction> jurisdictions = jurisdictionRepository.findBy();
         return jurisdictionMapper.jurisdictionsToJurisdictionResponses(jurisdictions);
     }
@@ -38,7 +38,7 @@ public class JurisdictionService implements iJurisdictionService {
     }
 
     @Override
-    public Page<JurisdictionResponse> findByCityStartingWith(String city, Pageable pageable) {
+    public Page<JurisdictionDTO> findByCityStartingWith(String city, Pageable pageable) {
         Page<Jurisdiction> jurisdictionPage = jurisdictionRepository.findByCityStartsWith(city, pageable);
         return jurisdictionPage.map(jurisdictionMapper::jurisdictionToJurisdictionResponse);
     }

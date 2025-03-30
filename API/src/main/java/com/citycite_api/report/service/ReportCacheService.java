@@ -41,7 +41,7 @@ public class ReportCacheService implements iReportCacheService {
     @Override
     public void cacheReport(ReportResponse report) {
 
-        String jurisdictionKey = jurisdictionKeyBase + report.getReportAddress().getJurisdictionID().toString();
+        String jurisdictionKey = jurisdictionKeyBase + report.getReportAddress().getJurisdiction().getID().toString();
 
         long expirationTimestamp = report.getCreatedAt().toInstant().toEpochMilli() + TimeUnit.MINUTES.toMillis(reportTTLMinutes);
         if (expirationTimestamp <= System.currentTimeMillis()) {

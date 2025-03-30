@@ -1,19 +1,19 @@
-package com.citycite_api.report.dto;
+package com.citycite_api.enforcement.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.*;
 
 @Data
-public class VehicleLicensePlateDTO {
+public class JurisdictionDTO {
 
     private Integer ID;
 
     @NotNull
     @NotBlank
-    @Size(min = 2, max = 8)
-    private String number;
+    @Size(min = 2, max = 32)
+    private String city;
 
     @NotNull
     @NotBlank

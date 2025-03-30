@@ -3,7 +3,7 @@ package com.citycite_api.auth.entity;
 import lombok.Data;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Email;
+import jakarta.validation.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import com.citycite_api.user.entity.User;
 

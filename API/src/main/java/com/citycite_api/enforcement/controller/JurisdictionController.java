@@ -1,6 +1,6 @@
 package com.citycite_api.enforcement.controller;
 
-import com.citycite_api.enforcement.dto.JurisdictionResponse;
+import com.citycite_api.enforcement.dto.JurisdictionDTO;
 import com.citycite_api.enforcement.service.iJurisdictionService;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -40,13 +40,13 @@ public class JurisdictionController implements iJurisdictionController {
 
     @Override
     @GetMapping
-    public ResponseEntity<Set<JurisdictionResponse>> getAll() {
+    public ResponseEntity<Set<JurisdictionDTO>> getAll() {
         return ResponseEntity.ok(jurisdictionService.getAll());
     }
 
     @Override
     @GetMapping("/search")
-    public ResponseEntity<Page<JurisdictionResponse>> findByCityStartingWith(
+    public ResponseEntity<Page<JurisdictionDTO>> findByCityStartingWith(
             @Size(min = 2, max = 32) @RequestParam(name = "city") @NotNull String city,
             @PageableDefault(page = 0, size = 10, sort = "city", direction = Sort.Direction.ASC) Pageable pageable
     ) {

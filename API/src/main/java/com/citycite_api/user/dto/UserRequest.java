@@ -11,13 +11,14 @@ public class UserRequest {
 
     @NotNull
     @Size(min = 2, max = 32)
-    private final String firstName;
+    private String firstName;
 
     @NotNull
     @Size(min = 2, max = 32)
-    private final String lastName;
+    private String lastName;
 
-    @NotNull @Past
-    private final Date birthDate;
+    @NotNull
+    @Past
+    private Date birthDate;
 
 }

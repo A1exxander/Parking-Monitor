@@ -1,6 +1,6 @@
 package com.citycite_api.enforcement.controller;
 
-import com.citycite_api.enforcement.dto.JurisdictionResponse;
+import com.citycite_api.enforcement.dto.JurisdictionDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,10 +24,10 @@ public interface iJurisdictionController {
     );
 
     @GetMapping
-    public ResponseEntity<Set<JurisdictionResponse>> getAll();
+    public ResponseEntity<Set<JurisdictionDTO>> getAll();
 
     @GetMapping("search")
-    ResponseEntity<Page<JurisdictionResponse>> findByCityStartingWith(
+    ResponseEntity<Page<JurisdictionDTO>> findByCityStartingWith(
             @Size(min = 2, max = 32) @RequestParam(name = "city") @NotNull String city,
             @PageableDefault(page = 0, size = 10, sort = "city", direction = Sort.Direction.ASC) Pageable pageable
     );
