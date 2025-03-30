@@ -33,20 +33,23 @@ public class ReportCacheService implements iReportCacheService {
     @Value("${redis.report-ttl-minutes}") // TTL in hours
     private Integer reportTTLMinutes;
 
-    private String baseGeoKey = "reports:geo:";
+    @Value("${redis.keys.jurisdiction-base}")
+    private String jurisdictionKeyBase = "reports:jurisdiction:";
+
+    @Value("${redis.keys.report-expirations}")
     private String expirationKey = "reports:expirations";
 
     @Override
     public void cacheReport(ReportResponse report) {
 
-        String jurisdictionKey = baseGeoKey + report.getReportAddress().getJurisdictionID().toString();
+        String jurisdictionKey = jurisdictionKeyBase + report.getReportAddress().getJurisdictionID().toString();
 
         long expirationTimestamp = report.getCreatedAt().toInstant().toEpochMilli() + TimeUnit.MINUTES.toMillis(reportTTLMinutes);
         if (expirationTimestamp <= System.currentTimeMillis()) {
             throw new IllegalArgumentException("Cannot cache expired report!");
         }
 
-        Point reportPoint = new Point(
+        Point reportPoint = new Point( // Maybe consider moving this into a GeoUtils class
                 report.getReportAddress().getAddressCoordinates().getLongitude(),
                 report.getReportAddress().getAddressCoordinates().getLatitude()
         );
@@ -72,7 +75,7 @@ public class ReportCacheService implements iReportCacheService {
     @Override
     public List<ReportMapResponse> getAllCachedReports(Integer jurisdictionID, Circle radius) {
 
-        String jurisdictionKey = baseGeoKey + jurisdictionID.toString();
+        String jurisdictionKey = jurisdictionKeyBase + jurisdictionID.toString();
         GeoResults<RedisGeoCommands.GeoLocation<String>> results = redisTemplate.opsForGeo().radius(jurisdictionKey, radius);
 
         if (results == null || results.getContent().isEmpty()) {
@@ -95,13 +98,13 @@ public class ReportCacheService implements iReportCacheService {
     @Override
     public void removeCachedReport(Integer jurisdictionID, Integer reportID) { // reportID is unique, but since it's located inside a jurisdiction, we need it for O(logn) removals
 
-        String jurisdictionKey = baseGeoKey + jurisdictionID.toString();
+        String jurisdictionKey = jurisdictionKeyBase + jurisdictionID.toString();
         redisTemplate.opsForZSet().remove(jurisdictionKey, reportID.toString());
         redisTemplate.opsForZSet().remove(expirationKey, reportID.toString());
 
     }
 
-    @Scheduled(fixedRate = 10, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.MINUTES)
     @SchedulerLock(name = "cleanupExpiredReports", lockAtLeastFor = "PT4M", lockAtMostFor = "PT5M")
     protected void cleanupExpiredReports() { // I have no idea how any of this works but hope it works
 
@@ -113,7 +116,7 @@ public class ReportCacheService implements iReportCacheService {
             // Use a SCAN cursor to safely iterate over all geo keys
             try (Cursor<String> cursor = redisTemplate.scan(
                     ScanOptions.scanOptions()
-                            .match(baseGeoKey + "*")
+                            .match(jurisdictionKeyBase + "*")
                             .count(100)
                             .build()
             )) {
