@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 @Repository
 public interface iJurisdictionRepository extends JpaRepository<Jurisdiction, Integer> {
     public Set<Jurisdiction> findBy();
+    public Jurisdiction findByCityIgnoreCaseAndStateInitialsIgnoreCase(String city, String stateInitials);
     public boolean existsByCityIgnoreCaseAndStateInitialsIgnoreCase(String city, String stateInitials);
     public Page<Jurisdiction> findByCityStartsWith(String city, Pageable page);
 }
