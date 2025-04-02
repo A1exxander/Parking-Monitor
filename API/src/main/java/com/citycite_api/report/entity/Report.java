@@ -8,7 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 import java.time.Duration;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Set;
 
 @Entity
@@ -51,11 +51,11 @@ public class Report {
 
     @Column(updatable = false, nullable = false)
     @CreationTimestamp
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     @Column
     @UpdateTimestamp
-    private Timestamp updatedAt;
+    private Instant updatedAt;
 
     public ReportStatus getReportStatus() {
 
@@ -75,8 +75,7 @@ public class Report {
     }
 
     private boolean isTimedOut() {
-        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-        return createdAt == null ? false : Duration.between(createdAt.toInstant(), currentTimestamp.toInstant()).toHours() >= 2;
+        return createdAt == null ? false : Duration.between(createdAt, Instant.now()).toHours() >= 2;
     }
 
 }
