@@ -45,7 +45,7 @@ public class ReportGeoCache implements iReportGeoCache {
 
         String jurisdictionKey = jurisdictionKeyBase + report.getReportAddress().getJurisdiction().getID().toString();
 
-        long expirationTimestamp = report.getCreatedAt().toInstant().toEpochMilli() + TimeUnit.MINUTES.toMillis(reportTTLMinutes);
+        long expirationTimestamp = report.getCreatedAt().toEpochMilli() + TimeUnit.MINUTES.toMillis(reportTTLMinutes);
         if (expirationTimestamp <= System.currentTimeMillis()) {
             throw new IllegalArgumentException("Cannot cache a report that has already expired!");
         }
