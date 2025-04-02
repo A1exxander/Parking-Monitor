@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Set;
 
 @Entity
@@ -24,11 +24,11 @@ public class Department {
 
     @Column(updatable = false, nullable = false)
     @CreationTimestamp
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     @Column(nullable = true)
     @UpdateTimestamp
-    private Timestamp updatedAt;
+    private Instant updatedAt;
 
     @JoinColumn(name = "JurisdictionID", nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)

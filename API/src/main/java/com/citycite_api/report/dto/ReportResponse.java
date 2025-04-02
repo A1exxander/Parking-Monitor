@@ -4,7 +4,7 @@ import com.citycite_api.enforcement.dto.OfficerResponse;
 import com.citycite_api.report.entity.ResolutionStatus;
 import com.citycite_api.user.dto.UserResponse;
 import lombok.Data;
-import java.sql.Timestamp;
+import java.time.Instant;
 
 @Data
 public class ReportResponse {
@@ -17,7 +17,7 @@ public class ReportResponse {
     private OfficerResponse respondingOfficer;
     private ResolutionStatus resolutionStatus;
     private String resolutionNotes;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
 
 }

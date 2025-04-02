@@ -7,7 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -51,10 +51,10 @@ public class User {
 
     @Column(updatable = false, nullable = false)
     @CreationTimestamp
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     @Column(nullable = true)
     @UpdateTimestamp
-    private Timestamp updatedAt;
+    private Instant updatedAt;
 
 }
