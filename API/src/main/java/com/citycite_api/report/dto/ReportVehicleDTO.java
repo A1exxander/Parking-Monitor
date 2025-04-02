@@ -31,6 +31,6 @@ public class ReportVehicleDTO { // DTO postfix is used to indicate it is used fo
 
     @NotNull
     @Valid
-    private VehicleLicensePlateDTO vehicleLicensePlateDTO;
+    private VehicleLicensePlateDTO vehicleLicensePlate;
 
 }
