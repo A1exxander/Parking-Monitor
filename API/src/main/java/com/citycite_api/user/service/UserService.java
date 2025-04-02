@@ -6,7 +6,6 @@ import com.citycite_api.user.dto.UserResponse;
 import com.citycite_api.user.entity.User;
 import com.citycite_api.user.mapper.iUserMapper;
 import com.citycite_api.user.repository.iUserRepository;
-import jakarta.persistence.Id;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
