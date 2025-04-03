@@ -1,6 +1,7 @@
 package com.citycite_api.enforcement.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
@@ -8,6 +9,7 @@ import java.time.Instant;
 import java.util.Set;
 
 @Entity
+@Data
 public class Department {
 
     @Id

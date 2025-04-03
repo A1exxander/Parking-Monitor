@@ -12,8 +12,10 @@ import java.util.List;
 
 @Repository
 public interface iReportRepository extends JpaRepository<Report, Integer> {
-    Page<Report> findBySubmittingUser_ID(Pageable pageable, Integer userId);
-    Page<Report> findByRespondingOfficer_ID(Pageable pageable, Integer officerId);
+
+    public Page<Report> findBySubmittingUser_ID(Pageable pageable, Integer userId);
+    public Page<Report> findByRespondingOfficer_ID(Pageable pageable, Integer officerId);
+
     @Query(value = """
         SELECT * FROM Report r
         WHERE 
@@ -29,5 +31,16 @@ public interface iReportRepository extends JpaRepository<Report, Integer> {
                 WHEN r.ResolutionStatus IS NOT NULL THEN 'RESOLVED'
             END = :#{#status.name()}
     """, nativeQuery = true)
-    List<Report> findByReportStatus(@Param("status") ReportStatus status);
+    public List<Report> findByReportStatus(@Param("status") ReportStatus status);
+
+    @Query(value = """
+        SELECT CASE WHEN COUNT(r) > 0 THEN TRUE ELSE FALSE END
+        FROM Report R
+        WHERE 
+            R.respondingOfficerID = :officerID
+            AND r.CreatedAt >= NOW() - INTERVAL 2 HOUR 
+            AND r.ResolutionStatus IS NULL      
+    """, nativeQuery = true)
+    public boolean findByReportStatusAndRespondingOfficerID(@Param("status") ReportStatus status, @Param("respondingOfficerID") Integer officerID);
+
 }
