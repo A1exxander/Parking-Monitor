@@ -1,7 +1,7 @@
 package com.citycite_api.report.service;
 
 import com.citycite_api.report.dto.AddressCoordinatesDTO;
-import com.citycite_api.report.dto.ReportGeoResponse;
+import com.citycite_api.report.dto.GeoReportResponse;
 import com.citycite_api.report.dto.ReportResponse;
 import jakarta.transaction.Transactional;
 import lombok.*;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter
-public class ReportGeoCache implements iReportGeoCache {
+public class GeoReportCache implements iGeoReportCache {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate; // May need to switch to Object
@@ -41,7 +41,7 @@ public class ReportGeoCache implements iReportGeoCache {
     private String expirationKey = "reports:expirations";
 
     @Override
-    public void cacheReportGeo(ReportResponse report) {
+    public void cacheGeoReport(ReportResponse report) {
 
         String jurisdictionKey = jurisdictionKeyBase + report.getReportAddress().getJurisdiction().getID().toString();
 
@@ -62,19 +62,19 @@ public class ReportGeoCache implements iReportGeoCache {
     }
 
     @Override
-    public List<ReportGeoResponse> getAllCachedReportGeo(Integer jurisdictionID) {
+    public List<GeoReportResponse> getAllCachedGeoReports(Integer jurisdictionID) {
 
         Circle planetRadius = new Circle( // Create a radius large enough to cover the entire planet ( ~20,037 )
                 new Point(0, 0),
                 new Distance(20037, Metrics.KILOMETERS)
         );
 
-        return getAllCachedReportGeo(jurisdictionID, planetRadius);
+        return getAllCachedGeoReports(jurisdictionID, planetRadius);
 
     }
 
     @Override
-    public List<ReportGeoResponse> getAllCachedReportGeo(Integer jurisdictionID, Circle radius) {
+    public List<GeoReportResponse> getAllCachedGeoReports(Integer jurisdictionID, Circle radius) {
 
         String jurisdictionKey = jurisdictionKeyBase + jurisdictionID.toString();
         GeoResults<RedisGeoCommands.GeoLocation<String>> results = redisTemplate.opsForGeo().radius(jurisdictionKey, radius);
@@ -90,7 +90,7 @@ public class ReportGeoCache implements iReportGeoCache {
                     Point point = location.getPoint();
                     Double expirationTimestamp = redisTemplate.opsForZSet().score(expirationKey, reportId);
 
-                    return new ReportGeoResponse(
+                    return new GeoReportResponse(
                             Integer.parseInt(reportId),
                             new AddressCoordinatesDTO(point.getX(), point.getY()),
                             Instant.ofEpochSecond(expirationTimestamp.longValue())
@@ -101,9 +101,8 @@ public class ReportGeoCache implements iReportGeoCache {
 
     }
 
-
     @Override
-    public void removeCachedReportGeo(Integer jurisdictionID, Integer reportID) { // reportID is unique, but since it's located inside a jurisdiction, we need it for O(logn) removals
+    public void removeCachedGeoReport(Integer jurisdictionID, Integer reportID) { // reportID is unique, but since it's located inside a jurisdiction, we need it for O(logn) removals
 
         String jurisdictionKey = jurisdictionKeyBase + jurisdictionID.toString();
         redisTemplate.opsForGeo().remove(jurisdictionKey, reportID.toString());
@@ -113,7 +112,7 @@ public class ReportGeoCache implements iReportGeoCache {
 
     @Scheduled(fixedRate = 5, timeUnit = TimeUnit.MINUTES)
     @SchedulerLock(name = "cleanupExpiredReports", lockAtLeastFor = "PT4M", lockAtMostFor = "PT5M")
-    protected void cleanupExpiredReportGeo() { // I have no idea how any of this works but hope it works
+    protected void cleanupExpiredGeoReports() { // I have no idea how any of this works but hope it works
 
         long now = System.currentTimeMillis();
         Set<String> expiredReportIds = redisTemplate.opsForZSet().rangeByScore(expirationKey, 0, now);

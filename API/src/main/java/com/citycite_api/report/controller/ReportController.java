@@ -1,6 +1,6 @@
 package com.citycite_api.report.controller;
 
-import com.citycite_api.report.dto.ReportGeoResponse;
+import com.citycite_api.report.dto.GeoReportResponse;
 import com.citycite_api.report.service.iReportService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,11 +26,11 @@ public class ReportController implements iReportController {
     @Override
     @GetMapping("/geo")
     @PreAuthorize("hasRole('OFFICER')")
-    public ResponseEntity<List<ReportGeoResponse>> getAllReportGeo(@NotNull Authentication authentication) {
+    public ResponseEntity<List<GeoReportResponse>> getAllGeoReports(@NotNull Authentication authentication) {
 
         Integer currentOfficerID = (Integer) authentication.getPrincipal();
-        List<ReportGeoResponse> reportGeoResponseList = reportService.getReportGeoForOfficer(currentOfficerID);
-        return ResponseEntity.ok(reportGeoResponseList);
+        List<GeoReportResponse> geoReportResponseList = reportService.getReportGeoForOfficer(currentOfficerID);
+        return ResponseEntity.ok(geoReportResponseList);
 
     }
 

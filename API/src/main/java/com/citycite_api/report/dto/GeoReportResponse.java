@@ -9,7 +9,7 @@ import java.time.Instant;
 
 @Data
 @AllArgsConstructor
-public class ReportGeoResponse {
+public class GeoReportResponse {
 
     @NotNull
     @Min(1)

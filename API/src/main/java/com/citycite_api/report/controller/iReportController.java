@@ -1,6 +1,6 @@
 package com.citycite_api.report.controller;
 
-import com.citycite_api.report.dto.ReportGeoResponse;
+import com.citycite_api.report.dto.GeoReportResponse;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +15,6 @@ public interface iReportController {
 
     @GetMapping("/geo")
     @PreAuthorize("hasRole('OFFICER')")
-    public ResponseEntity<List<ReportGeoResponse>> getAllReportGeo(@NotNull Authentication authentication);
+    public ResponseEntity<List<GeoReportResponse>> getAllGeoReports(@NotNull Authentication authentication);
 
 }
