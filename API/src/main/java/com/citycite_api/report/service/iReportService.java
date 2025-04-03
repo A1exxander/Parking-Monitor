@@ -8,6 +8,6 @@ import java.util.List;
 @Service
 @Transactional
 public interface iReportService {
-    List<ReportGeoResponse> getReportGeoForOfficer(Integer userID);
+    List<ReportGeoResponse> getReportGeoForOfficer(Integer officerID);
     public boolean isOfficerRespondingToReport(Integer officerID);
 }
