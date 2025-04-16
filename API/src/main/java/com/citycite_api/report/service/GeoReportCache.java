@@ -56,8 +56,8 @@ public class GeoReportCache implements iGeoReportCache {
         );
 
         // With Redis, we cannot add a TTL to each val in a geoset, and we will need to cache expiration separately
-        redisTemplate.opsForGeo().add(jurisdictionKey, reportPoint, report.getReportID().toString());
-        redisTemplate.opsForZSet().add(expirationKey, report.getReportID().toString(), expirationTimestamp);
+        redisTemplate.opsForGeo().add(jurisdictionKey, reportPoint, report.getID().toString());
+        redisTemplate.opsForZSet().add(expirationKey, report.getID().toString(), expirationTimestamp);
 
     }
 
