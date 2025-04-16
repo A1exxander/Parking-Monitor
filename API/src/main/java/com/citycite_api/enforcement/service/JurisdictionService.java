@@ -38,8 +38,8 @@ public class JurisdictionService implements iJurisdictionService {
     }
 
     @Override
-    public Page<JurisdictionDTO> findByCityStartingWith(String city, Pageable pageable) {
-        Page<Jurisdiction> jurisdictionPage = jurisdictionRepository.findByCityStartsWith(city, pageable);
+    public Page<JurisdictionDTO> findByCityStartingWith(Pageable pageable, String city) {
+        Page<Jurisdiction> jurisdictionPage = jurisdictionRepository.findByCityStartsWith(pageable, city);
         return jurisdictionPage.map(jurisdictionMapper::jurisdictionToJurisdictionResponse);
     }
 

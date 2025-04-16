@@ -12,5 +12,5 @@ import java.util.Set;
 public interface iJurisdictionService {
     public Set<JurisdictionDTO> getAll();
     public boolean isSupported(String city, String stateInitials);
-    public Page<JurisdictionDTO> findByCityStartingWith(String city, Pageable pageable);
+    public Page<JurisdictionDTO> findByCityStartingWith(Pageable pageable, String city);
 }

@@ -12,5 +12,5 @@ public interface iJurisdictionRepository extends JpaRepository<Jurisdiction, Int
     public Set<Jurisdiction> findBy();
     public Jurisdiction findByCityIgnoreCaseAndStateInitialsIgnoreCase(String city, String stateInitials);
     public boolean existsByCityIgnoreCaseAndStateInitialsIgnoreCase(String city, String stateInitials);
-    public Page<Jurisdiction> findByCityStartsWith(String city, Pageable page);
+    public Page<Jurisdiction> findByCityStartsWith(Pageable page, String city);
 }

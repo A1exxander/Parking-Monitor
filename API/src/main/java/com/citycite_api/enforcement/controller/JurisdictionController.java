@@ -50,7 +50,7 @@ public class JurisdictionController implements iJurisdictionController {
             @Size(min = 2, max = 32) @RequestParam(name = "city") @NotNull String city,
             @PageableDefault(page = 0, size = 10, sort = "city", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        return ResponseEntity.ok(jurisdictionService.findByCityStartingWith(city, pageable));
+        return ResponseEntity.ok(jurisdictionService.findByCityStartingWith(pageable, city));
     }
 
 }
