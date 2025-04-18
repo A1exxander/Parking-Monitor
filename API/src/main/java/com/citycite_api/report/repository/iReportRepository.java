@@ -9,12 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface iReportRepository extends JpaRepository<Report, Integer> {
 
-    public Page<Report> findBySubmittingUser_ID(Pageable pageable, Integer userId);
-    public Page<Report> findByRespondingOfficer_ID(Pageable pageable, Integer officerId);
+    public Optional<Report> findBySubmittingUser_ID(Integer userId);
+    public Page<Report> findAllBySubmittingUser_ID(Pageable pageable, Integer userId);
+    public Page<Report> findAllByRespondingOfficer_ID(Pageable pageable, Integer officerId);
 
     @Query(value = """
         SELECT * FROM Report r

@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -30,7 +31,7 @@ public class ReportService implements iReportService {
     private iOfficerService officerService;
 
     @Autowired
-    private iGeoReportCache reportGeoCache;
+    private iGeoReportCache geoReportCache;
 
     @Autowired
     private iReportRepository reportRepository;
@@ -49,9 +50,8 @@ public class ReportService implements iReportService {
         OfficerResponse officer = officerService.getOfficerByID(officerID); // User service then casting it also works
         Integer jurisdictionID = officer.getDepartment().getJurisdiction().getID();
 
-        List<GeoReportResponse> geoReportResponseList = reportGeoCache.getAllCachedGeoReports(jurisdictionID);
         // Should filter by report types that our officer's department can handle in the future
-        return geoReportResponseList;
+        return geoReportCache.getAllCachedGeoReports(jurisdictionID);
 
     }
 
@@ -61,14 +61,14 @@ public class ReportService implements iReportService {
     }
 
     @Override
-    public Page<ReportResponse> getReportsByRespondingOfficerID(Pageable pageable, Integer officerID) {
-        Page<Report> reportPage = reportRepository.findByRespondingOfficer_ID(pageable, officerID);
+    public Page<ReportResponse> findReportsByRespondingOfficerID(Pageable pageable, Integer officerID) {
+        Page<Report> reportPage = reportRepository.findAllByRespondingOfficer_ID(pageable, officerID);
         return reportPage.map(reportMapper::reportToReportResponse);
     }
 
     @Override
-    public Page<ReportResponse> getReportsBySubmittingUserID(Pageable pageable, Integer userID) {
-        Page<Report> reportPage = reportRepository.findBySubmittingUser_ID(pageable, userID);
+    public Page<ReportResponse> findReportsBySubmittingUserID(Pageable pageable, Integer userID) {
+        Page<Report> reportPage = reportRepository.findAllBySubmittingUser_ID(pageable, userID);
         return reportPage.map(reportMapper::reportToReportResponse);
     }
 
@@ -77,16 +77,16 @@ public class ReportService implements iReportService {
 
         Page<ReportResponse> reportsResponse = null;
 
-        switch (accountType) { // We can accept account type is valid, because if it isnt, userID isnt either
+        switch (accountType) { // We can ensure account type from controller is valid
 
             case USER ->
-                    reportsResponse = getReportsBySubmittingUserID(pageable, userID);
+                    reportsResponse = findReportsBySubmittingUserID(pageable, userID);
             case OFFICER ->
-                    reportsResponse = getReportsByRespondingOfficerID(pageable, userID);
+                    reportsResponse = findReportsByRespondingOfficerID(pageable, userID);
             default ->
-                    throw new IllegalArgumentException("Unsupported account type!");
+                    throw new IllegalStateException("Unsupported account type!");
 
-        };
+        }
 
         return reportsResponse;
 
@@ -94,7 +94,25 @@ public class ReportService implements iReportService {
 
     @Override
     public ReportResponse getReportByID(Integer reportID, Integer userID, AccountType accountType) {
-        return null;
+
+        Report report = null;
+
+        switch (accountType) {
+
+            case USER ->
+                    report = reportRepository.findBySubmittingUser_ID(reportID).orElseThrow(() -> new NoSuchElementException("Report with the ID " + reportID+ " does not exist."));
+            case OFFICER -> {
+                report = reportRepository.findById(reportID).orElseThrow(() -> new NoSuchElementException("Report with the ID " + reportID + " does not exist."));
+                if (report.getRespondingOfficer() != null && report.getRespondingOfficer().getID() != userID){
+                    throw new SecurityException("Report has a different responding officer ID.");
+                }
+            }
+            default ->
+                    throw new IllegalStateException("Unsupported account type!");
+        }
+
+        return reportMapper.reportToReportResponse(report);
+
     }
 
 }
