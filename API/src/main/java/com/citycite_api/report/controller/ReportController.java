@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -53,19 +52,7 @@ public class ReportController implements iReportController {
                 .replaceFirst("^ROLE_", "")
                 .toUpperCase()); // Should prob move this into its own method, and use ROLE_ for account types in future
 
-        Page<ReportResponse> reportsResponse = null;
-
-        switch (accountType) {
-
-            case USER ->
-                    reportsResponse = reportService.getReportsWithSubmittingUserID(pageable, userID);
-            case OFFICER ->
-                    reportsResponse = reportService.getReportsWithRespondingOfficerID(pageable, userID);
-            default ->
-                    throw new IllegalArgumentException("Unsupported account type!");
-
-        };
-
+        Page<ReportResponse> reportsResponse = reportService.getReportsForUser(pageable, userID, accountType);
         return ResponseEntity.ok(reportsResponse);
 
     }

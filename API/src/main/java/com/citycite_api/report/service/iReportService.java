@@ -2,6 +2,7 @@ package com.citycite_api.report.service;
 
 import com.citycite_api.report.dto.GeoReportResponse;
 import com.citycite_api.report.dto.ReportResponse;
+import com.citycite_api.user.entity.AccountType;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,5 @@ public interface iReportService {
     public boolean isOfficerRespondingToReport(Integer officerID);
     public Page<ReportResponse> getReportsWithRespondingOfficerID(Pageable pageable, Integer officerID);
     public Page<ReportResponse> getReportsWithSubmittingUserID(Pageable pageable, Integer userID);
+    public Page<ReportResponse> getReportsForUser(Pageable pageable, Integer userID, AccountType accountType);
 }

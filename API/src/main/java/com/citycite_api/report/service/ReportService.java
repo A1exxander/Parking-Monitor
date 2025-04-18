@@ -8,6 +8,7 @@ import com.citycite_api.report.entity.Report;
 import com.citycite_api.report.entity.ReportStatus;
 import com.citycite_api.report.mapper.iReportMapper;
 import com.citycite_api.report.repository.iReportRepository;
+import com.citycite_api.user.entity.AccountType;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -69,6 +70,26 @@ public class ReportService implements iReportService {
     public Page<ReportResponse> getReportsWithSubmittingUserID(Pageable pageable, Integer userID) {
         Page<Report> reportPage = reportRepository.findBySubmittingUser_ID(pageable, userID);
         return reportPage.map(reportMapper::reportToReportResponse);
+    }
+
+    @Override
+    public Page<ReportResponse> getReportsForUser(Pageable pageable, Integer userID, AccountType accountType) {
+
+        Page<ReportResponse> reportsResponse = null;
+
+        switch (accountType) { // We can accept account type is valid, because if it isnt, userID isnt either
+
+            case USER ->
+                    reportsResponse = getReportsWithSubmittingUserID(pageable, userID);
+            case OFFICER ->
+                    reportsResponse = getReportsWithRespondingOfficerID(pageable, userID);
+            default ->
+                    throw new IllegalArgumentException("Unsupported account type!");
+
+        };
+
+        return reportsResponse;
+
     }
 
 }
