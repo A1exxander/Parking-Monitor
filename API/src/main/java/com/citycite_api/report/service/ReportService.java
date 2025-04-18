@@ -16,6 +16,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class ReportService implements iReportService {
     private iReportMapper reportMapper;
 
     @Override
+    @PreAuthorize("hasRole('OFFICER')")
     public List<GeoReportResponse> getReportGeoForOfficer(Integer officerID) {
 
         if (isOfficerRespondingToReport(officerID)) {

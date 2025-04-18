@@ -31,7 +31,6 @@ public class ReportController implements iReportController {
 
     @Override
     @GetMapping("/geo")
-    @PreAuthorize("hasRole('OFFICER')")
     public ResponseEntity<List<GeoReportResponse>> getAllGeoReports(@NotNull Authentication authentication) {
 
         Integer currentOfficerID = (Integer) authentication.getPrincipal();

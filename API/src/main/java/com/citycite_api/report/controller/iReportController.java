@@ -20,7 +20,6 @@ import java.util.List;
 public interface iReportController {
 
     @GetMapping("/geo")
-    @PreAuthorize("hasRole('OFFICER')")
     public ResponseEntity<List<GeoReportResponse>> getAllGeoReports(@NotNull Authentication authentication);
 
 
