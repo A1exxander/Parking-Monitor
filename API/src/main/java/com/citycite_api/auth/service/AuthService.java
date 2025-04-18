@@ -43,7 +43,7 @@ public class AuthService implements iAuthService {
             throw new IllegalArgumentException("Invalid login request! Invalid credentials provided."); // Don't inform user if their email exists or if credentials are invalid
         }
 
-        UserResponse user = userService.findUserByEmail(credentialsRequest.getEmailAddress());
+        UserResponse user = userService.getUserByEmail(credentialsRequest.getEmailAddress());
         return jwtProvider.generateAccessJWT(user.getID(), user.getAccountType());
 
     }

@@ -24,7 +24,7 @@ public class UserController {
     @GetMapping("/current")
     public ResponseEntity<UserResponse> getCurrentUser(@NotNull Authentication authentication) {
         Integer currentUserID = (Integer) authentication.getPrincipal(); // UserID is already validated from our filter
-        return ResponseEntity.ok(userService.findUserByID(currentUserID));
+        return ResponseEntity.ok(userService.getUserByID(currentUserID));
     }
 
 }

@@ -40,13 +40,13 @@ public class ReportService implements iReportService {
 
     @Override
     @PreAuthorize("hasRole('OFFICER')")
-    public List<GeoReportResponse> getReportGeoForOfficer(Integer officerID) {
+    public List<GeoReportResponse> getGeoReports(Integer officerID) {
 
         if (isOfficerRespondingToReport(officerID)) {
             throw new IllegalArgumentException("Officer is already responding to an in-process report!"); // Ideally we should throw custom exception
         }
 
-        OfficerResponse officer = officerService.findOfficerByID(officerID); // User service then casting it also works
+        OfficerResponse officer = officerService.getOfficerByID(officerID); // User service then casting it also works
         Integer jurisdictionID = officer.getDepartment().getJurisdiction().getID();
 
         List<GeoReportResponse> geoReportResponseList = reportGeoCache.getAllCachedGeoReports(jurisdictionID);
@@ -61,28 +61,28 @@ public class ReportService implements iReportService {
     }
 
     @Override
-    public Page<ReportResponse> getReportsWithRespondingOfficerID(Pageable pageable, Integer officerID) {
+    public Page<ReportResponse> getReportsByRespondingOfficerID(Pageable pageable, Integer officerID) {
         Page<Report> reportPage = reportRepository.findByRespondingOfficer_ID(pageable, officerID);
         return reportPage.map(reportMapper::reportToReportResponse);
     }
 
     @Override
-    public Page<ReportResponse> getReportsWithSubmittingUserID(Pageable pageable, Integer userID) {
+    public Page<ReportResponse> getReportsBySubmittingUserID(Pageable pageable, Integer userID) {
         Page<Report> reportPage = reportRepository.findBySubmittingUser_ID(pageable, userID);
         return reportPage.map(reportMapper::reportToReportResponse);
     }
 
     @Override
-    public Page<ReportResponse> getReportsForUser(Pageable pageable, Integer userID, AccountType accountType) {
+    public Page<ReportResponse> getReportsForUser(Pageable pageable, Integer userID, AccountType accountType) { // Can maybe use better name
 
         Page<ReportResponse> reportsResponse = null;
 
         switch (accountType) { // We can accept account type is valid, because if it isnt, userID isnt either
 
             case USER ->
-                    reportsResponse = getReportsWithSubmittingUserID(pageable, userID);
+                    reportsResponse = getReportsBySubmittingUserID(pageable, userID);
             case OFFICER ->
-                    reportsResponse = getReportsWithRespondingOfficerID(pageable, userID);
+                    reportsResponse = getReportsByRespondingOfficerID(pageable, userID);
             default ->
                     throw new IllegalArgumentException("Unsupported account type!");
 
@@ -90,6 +90,11 @@ public class ReportService implements iReportService {
 
         return reportsResponse;
 
+    }
+
+    @Override
+    public ReportResponse getReportByID(Integer reportID, Integer userID, AccountType accountType) {
+        return null;
     }
 
 }

@@ -7,6 +7,7 @@ import com.citycite_api.enforcement.repository.iOfficerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -19,8 +20,8 @@ public class OfficerService implements iOfficerService {
     private iOfficerMapper officerMapper;
 
     @Override
-    public OfficerResponse findOfficerByID(Integer ID) {
-        Officer officer = officerRepository.findById(ID).get();
+    public OfficerResponse getOfficerByID(Integer ID) {
+        Officer officer = officerRepository.findById(ID).orElseThrow(() -> new NoSuchElementException("User with the ID " + ID + " not found."));
         return officerMapper.officerToOfficerResponse(officer);
     }
 

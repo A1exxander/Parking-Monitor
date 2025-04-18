@@ -41,13 +41,13 @@ public class UserService implements iUserService {
     }
 
     @Override
-    public UserResponse findUserByEmail(String emailAddress) {
+    public UserResponse getUserByEmail(String emailAddress) {
         User user = userRepository.findByCredentialsEmailAddress(emailAddress).orElseThrow(() -> new NoSuchElementException("User with the email " + emailAddress + " not found."));
         return userMapper.userToUserResponse(user);
     }
 
     @Override
-    public UserResponse findUserByID(Integer ID) {
+    public UserResponse getUserByID(Integer ID) {
         User user = userRepository.findById(ID).orElseThrow(() -> new NoSuchElementException("User with ID " + ID + " not found."));
         return userMapper.userToUserResponse(user);
     }

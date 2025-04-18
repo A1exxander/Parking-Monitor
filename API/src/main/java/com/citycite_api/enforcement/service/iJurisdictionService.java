@@ -10,7 +10,7 @@ import java.util.Set;
 @Service
 @Transactional
 public interface iJurisdictionService {
-    public Set<JurisdictionDTO> getAll();
-    public boolean isSupported(String city, String stateInitials);
+    public boolean isJurisdictionSupported(String city, String stateInitials);
+    public Set<JurisdictionDTO> getAllJurisdictions();
     public Page<JurisdictionDTO> findByCityStartingWith(Pageable pageable, String city);
 }

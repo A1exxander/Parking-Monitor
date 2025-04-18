@@ -14,9 +14,10 @@ import java.util.List;
 @Transactional
 public interface iReportService {
     @PreAuthorize("hasRole('OFFICER')")
-    public List<GeoReportResponse> getReportGeoForOfficer(Integer officerID);
+    public List<GeoReportResponse> getGeoReports(Integer officerID);
     public boolean isOfficerRespondingToReport(Integer officerID);
-    public Page<ReportResponse> getReportsWithRespondingOfficerID(Pageable pageable, Integer officerID);
-    public Page<ReportResponse> getReportsWithSubmittingUserID(Pageable pageable, Integer userID);
+    public Page<ReportResponse> getReportsByRespondingOfficerID(Pageable pageable, Integer officerID);
+    public Page<ReportResponse> getReportsBySubmittingUserID(Pageable pageable, Integer userID);
     public Page<ReportResponse> getReportsForUser(Pageable pageable, Integer userID, AccountType accountType);
+    public ReportResponse getReportByID(Integer reportID, Integer userID, AccountType accountType);
 }

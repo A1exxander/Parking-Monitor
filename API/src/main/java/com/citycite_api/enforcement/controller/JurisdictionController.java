@@ -35,13 +35,13 @@ public class JurisdictionController implements iJurisdictionController {
     public ResponseEntity<Boolean> isSupported(@Size(min = 2, max = 32) @RequestParam(name = "city") @NotNull String city,
                                                @Size(min = 2, max = 2) @RequestParam(name = "state") @NotNull String stateInitials
     ) {
-        return ResponseEntity.ok(jurisdictionService.isSupported(city, stateInitials));
+        return ResponseEntity.ok(jurisdictionService.isJurisdictionSupported(city, stateInitials));
     }
 
     @Override
     @GetMapping
     public ResponseEntity<Set<JurisdictionDTO>> getAll() {
-        return ResponseEntity.ok(jurisdictionService.getAll());
+        return ResponseEntity.ok(jurisdictionService.getAllJurisdictions());
     }
 
     @Override

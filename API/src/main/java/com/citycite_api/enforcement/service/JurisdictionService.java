@@ -27,14 +27,14 @@ public class JurisdictionService implements iJurisdictionService {
     private iJurisdictionMapper jurisdictionMapper;
 
     @Override
-    public Set<JurisdictionDTO> getAll() {
-        Set<Jurisdiction> jurisdictions = jurisdictionRepository.findBy();
-        return jurisdictionMapper.jurisdictionsToJurisdictionResponses(jurisdictions);
+    public boolean isJurisdictionSupported(String city, String stateInitials) {
+        return jurisdictionRepository.existsByCityIgnoreCaseAndStateInitialsIgnoreCase(city, stateInitials);
     }
 
     @Override
-    public boolean isSupported(String city, String stateInitials) {
-        return jurisdictionRepository.existsByCityIgnoreCaseAndStateInitialsIgnoreCase(city, stateInitials);
+    public Set<JurisdictionDTO> getAllJurisdictions() {
+        Set<Jurisdiction> jurisdictions = jurisdictionRepository.findBy();
+        return jurisdictionMapper.jurisdictionsToJurisdictionResponses(jurisdictions);
     }
 
     @Override

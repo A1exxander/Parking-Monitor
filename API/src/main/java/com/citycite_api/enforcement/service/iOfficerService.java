@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 public interface iOfficerService {
-    public OfficerResponse findOfficerByID(Integer ID);
+    public OfficerResponse getOfficerByID(Integer ID);
 }
