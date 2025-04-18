@@ -3,6 +3,7 @@ package com.citycite_api.report.controller;
 import com.citycite_api.report.dto.GeoReportResponse;
 import com.citycite_api.report.dto.ReportResponse;
 import com.citycite_api.report.service.iReportService;
+import com.citycite_api.security.utils.SecurityUtils;
 import com.citycite_api.user.entity.AccountType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -45,12 +46,7 @@ public class ReportController implements iReportController {
 
         // Extract authenticated user information
         Integer userID = (Integer) authentication.getPrincipal();
-        AccountType accountType = AccountType.valueOf(authentication.getAuthorities()
-                .iterator()
-                .next()
-                .getAuthority()
-                .replaceFirst("^ROLE_", "")
-                .toUpperCase()); // Should prob move this into its own method, and use ROLE_ for account types in future
+        AccountType accountType = SecurityUtils.extractUserRole(authentication);
 
         Page<ReportResponse> reportsResponse = reportService.getReportsForUser(pageable, userID, accountType);
         return ResponseEntity.ok(reportsResponse);
