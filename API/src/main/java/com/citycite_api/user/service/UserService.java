@@ -6,6 +6,8 @@ import com.citycite_api.user.dto.UserResponse;
 import com.citycite_api.user.entity.User;
 import com.citycite_api.user.mapper.iUserMapper;
 import com.citycite_api.user.repository.iUserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +21,9 @@ import java.util.NoSuchElementException;
 @Transactional
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter
 public class UserService implements iUserService {
+
+    @PersistenceContext
+    private EntityManager entityManager; // Needed for getting entities by reference
 
     @Autowired
     public iUserRepository userRepository;
@@ -44,6 +49,12 @@ public class UserService implements iUserService {
     public UserResponse getUserByEmail(String emailAddress) {
         User user = userRepository.findByCredentialsEmailAddress(emailAddress).orElseThrow(() -> new NoSuchElementException("User with the email " + emailAddress + " not found."));
         return userMapper.userToUserResponse(user);
+    }
+
+    @Override
+    public User getUserEntityReferenceByID(Integer ID) {
+        User user = entityManager.getReference(User.class, ID);
+        return user;
     }
 
     @Override
