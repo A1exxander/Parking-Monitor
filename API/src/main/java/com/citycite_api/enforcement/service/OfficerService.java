@@ -21,7 +21,7 @@ public class OfficerService implements iOfficerService {
 
     @Override
     public OfficerResponse getOfficerByID(Integer ID) {
-        Officer officer = officerRepository.findById(ID).orElseThrow(() -> new NoSuchElementException("User with the ID " + ID + " not found."));
+        Officer officer = officerRepository.findById(ID).orElseThrow(() -> new NoSuchElementException("Officer with the ID " + ID + " not found."));
         return officerMapper.officerToOfficerResponse(officer);
     }
 
