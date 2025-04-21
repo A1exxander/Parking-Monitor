@@ -1,10 +1,12 @@
 package com.citycite_api.report.controller;
 
 import com.citycite_api.report.dto.GeoReportResponse;
+import com.citycite_api.report.dto.ReportRequest;
 import com.citycite_api.report.dto.ReportResponse;
 import com.citycite_api.report.service.iReportService;
 import com.citycite_api.security.utils.SecurityUtils;
 import com.citycite_api.user.entity.AccountType;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -13,13 +15,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
@@ -50,7 +51,7 @@ public class ReportController implements iReportController {
         Integer userID = (Integer) authentication.getPrincipal();
         AccountType accountType = SecurityUtils.extractUserRole(authentication);
 
-        Page<ReportResponse> reportsResponse = reportService.getReportsForUser(pageable, userID, accountType);
+        Page<ReportResponse> reportsResponse = reportService.findReportsByUserIDAndAccountType(pageable, userID, accountType);
         return ResponseEntity.ok(reportsResponse);
 
     }
@@ -67,5 +68,10 @@ public class ReportController implements iReportController {
 
     }
 
+    @PostMapping
+    public ResponseEntity<Void> createReport(@NotNull Authentication authentication, @RequestBody @Valid ReportRequest reportRequest) {
+        reportService.createReport(reportRequest, (Integer) authentication.getPrincipal());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
 }
