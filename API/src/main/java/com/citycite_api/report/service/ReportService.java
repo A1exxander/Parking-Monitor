@@ -120,7 +120,7 @@ public class ReportService implements iReportService {
             case OFFICER -> {
                 report = reportRepository.findById(reportID).orElseThrow(() -> new NoSuchElementException("Report with the ID " + reportID + " does not exist."));
                 if (report.getRespondingOfficer() != null && report.getRespondingOfficer().getID() != userID){
-                    throw new SecurityException("Report has a different responding officer ID.");
+                    throw new SecurityException("Report with the ID " + reportID + " has a different responding officer ID.");
                 }
             }
             default ->
