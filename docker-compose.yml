@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+
+  cache:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+
+  database:
+    image: mysql:9.3.0
+    ports:
+      - "3306:3306"
+    env_file: .env
+    # Since ENV variable names are not 1-1 w env_file, we need to map them below
+    environment:
+      MYSQL_ROOT_PASSWORD: "${CITY_CITE_DB_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${CITY_CITE_DB_NAME}"
+      MYSQL_USER: "${CITY_CITE_DB_USERNAME}"
+      MYSQL_PASSWORD: "${CITY_CITE_DB_PASSWORD}"
+    volumes:
+      - ./Database/Volumes/MySQLVolume:/var/lib/mysql
+      - ./Database/Dumps/InitializationDump.sql:/docker-entrypoint-initdb.d/init.sql
+
+  api:
+    build: ./API
+    env_file: .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - cache
+      - database
