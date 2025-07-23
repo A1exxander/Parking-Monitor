@@ -68,6 +68,7 @@ public class ReportController implements iReportController {
 
     }
 
+    @Override
     @PostMapping
     public ResponseEntity<Void> createReport(@NotNull Authentication authentication, @RequestBody @Valid ReportRequest reportRequest) {
         reportService.createReport(reportRequest, (Integer) authentication.getPrincipal());

@@ -1,7 +1,9 @@
 package com.citycite_api.report.controller;
 
 import com.citycite_api.report.dto.GeoReportResponse;
+import com.citycite_api.report.dto.ReportRequest;
 import com.citycite_api.report.dto.ReportResponse;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
@@ -12,9 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +31,8 @@ public interface iReportController {
 
     @GetMapping("/{reportID}")
     public ResponseEntity<ReportResponse> getReport(@NotNull Authentication authentication, @PathVariable @NotNull @Min(1) Integer reportID);
+
+    @PostMapping
+    public ResponseEntity<Void> createReport(@NotNull Authentication authentication, @RequestBody @Valid ReportRequest reportRequest);
 
 }
