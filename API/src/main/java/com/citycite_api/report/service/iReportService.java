@@ -18,6 +18,9 @@ public interface iReportService {
     @PreAuthorize("hasRole('OFFICER')")
     public List<GeoReportResponse> getGeoReports(Integer officerID);
 
+    @PreAuthorize("hasRole('OFFICER')")
+    public void acceptReport(Integer reportID, Integer officerID);
+
     @PreAuthorize("hasRole('USER')")
     public void createReport(ReportRequest reportRequest, Integer userID);
 

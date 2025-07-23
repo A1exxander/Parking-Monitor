@@ -2,6 +2,7 @@ package com.citycite_api.report.service;
 
 import com.citycite_api.enforcement.dto.JurisdictionDTO;
 import com.citycite_api.enforcement.dto.OfficerResponse;
+import com.citycite_api.enforcement.entity.Officer;
 import com.citycite_api.enforcement.service.iJurisdictionService;
 import com.citycite_api.enforcement.service.iOfficerService;
 import com.citycite_api.report.dto.GeoReportResponse;
@@ -14,6 +15,7 @@ import com.citycite_api.report.mapper.iReportMapper;
 import com.citycite_api.report.repository.iReportRepository;
 import com.citycite_api.user.entity.AccountType;
 import com.citycite_api.user.service.iUserService;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,6 +51,9 @@ public class ReportService implements iReportService {
 
     @Autowired
     private iReportMapper reportMapper;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     @PreAuthorize("hasRole('OFFICER')")
@@ -128,6 +133,24 @@ public class ReportService implements iReportService {
         }
 
         return reportMapper.reportToReportResponse(report);
+
+    }
+
+    @Override
+    @PreAuthorize("hasRole('OFFICER')")
+    public void acceptReport(Integer reportID, Integer officerID) {
+
+        Report report = reportRepository.findById(reportID).get();
+
+        if (report.getReportStatus() != ReportStatus.OPEN) {
+            throw new IllegalArgumentException("Report is already assigned to another officer or has been closed!");
+        }
+        else if (reportRepository.existsUnresolvedReport(ReportStatus.IN_PROCESS, officerID)) {
+            throw new IllegalArgumentException("Officer is already assigned to another report!");
+        }
+
+        report.setRespondingOfficer(entityManager.getReference(Officer.class, officerID));
+        reportRepository.save(report);
 
     }
 
