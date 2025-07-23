@@ -52,9 +52,6 @@ public class ReportService implements iReportService {
     @Autowired
     private iReportMapper reportMapper;
 
-    @Autowired
-    private EntityManager entityManager;
-
     @Override
     @PreAuthorize("hasRole('OFFICER')")
     public List<GeoReportResponse> getGeoReports(Integer officerID) {
@@ -149,7 +146,7 @@ public class ReportService implements iReportService {
             throw new IllegalArgumentException("Officer is already assigned to another report!");
         }
 
-        report.setRespondingOfficer(entityManager.getReference(Officer.class, officerID));
+        report.setRespondingOfficer(officerService.getOfficerProxyByID(officerID));
         reportRepository.save(report);
 
     }

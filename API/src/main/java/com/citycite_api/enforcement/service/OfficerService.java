@@ -25,4 +25,9 @@ public class OfficerService implements iOfficerService {
         return officerMapper.officerToOfficerResponse(officer);
     }
 
+    @Override
+    public Officer getOfficerProxyByID(Integer ID) {
+        return officerRepository.getReferenceById(ID);
+    }
+
 }
