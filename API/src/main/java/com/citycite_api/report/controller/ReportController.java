@@ -17,10 +17,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 import java.util.List;
 
 @Controller
@@ -44,8 +44,7 @@ public class ReportController implements iReportController {
 
     @Override
     @GetMapping
-    public ResponseEntity<Page<ReportResponse>> getReports(@NotNull Authentication authentication,
-                                                           @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<ReportResponse>> getReports(@NotNull Authentication authentication, @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable) {
 
         // Extract authenticated user information
         Integer userID = (Integer) authentication.getPrincipal();
@@ -73,6 +72,13 @@ public class ReportController implements iReportController {
     public ResponseEntity<Void> createReport(@NotNull Authentication authentication, @RequestBody @Valid ReportRequest reportRequest) {
         reportService.createReport(reportRequest, (Integer) authentication.getPrincipal());
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping("/{reportID}/respondingOfficer")
+    public ResponseEnttiy<Void> acceptReport(@NotNull Authentication authentication, @PathVariable @NotNull @Min(1) Integer reportID) {
+        Integer userID = (Integer) authentication.getPrincipal();
+        reportService.acceptReport(reportID, userID);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build() 
     }
 
 }
