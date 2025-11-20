@@ -113,20 +113,13 @@ public class ReportService implements iReportService {
     @Override
     public ReportResponse getReportByID(Integer reportID, Integer userID, AccountType accountType) {
 
-        Report report = null;
-
-        switch (accountType) {
-
-            case USER ->
-                    report = reportRepository.findBySubmittingUser_ID(reportID).orElseThrow(() -> new NoSuchElementException("Report with the ID " + reportID + " does not exist."));
-            case OFFICER -> {
-                report = reportRepository.findById(reportID).orElseThrow(() -> new NoSuchElementException("Report with the ID " + reportID + " does not exist."));
-                if (report.getRespondingOfficer() != null && report.getRespondingOfficer().getID() != userID){
-                    throw new SecurityException("Report with the ID " + reportID + " has a different responding officer ID.");
-                }
-            }
-            default ->
-                    throw new IllegalStateException("Unsupported account type!");
+        Report report = reportRepository.findById(reportID).orElseThrow(() -> new NoSuchElementException("Report with the ID " + reportID + " does not exist."));
+        
+        if (accountType == AccountType.USER && report.getSubmittingUser().getID() != userID) { // Could maybe include the lower condition but w/e
+            throw new SecurityException("User with the ID: " + userID + " does not have permission to view the report with ID: " + reportID);
+        }
+        else if (accountType == AccountType.OFFICER && report.getRespondingOfficer() != null && report.getRespondingOfficer().getID() != userID) {
+            throw new SecurityException("Officer with the ID: " + userID + " does not have permission to view the report with ID: " + reportID);
         }
 
         return reportMapper.reportToReportResponse(report);
